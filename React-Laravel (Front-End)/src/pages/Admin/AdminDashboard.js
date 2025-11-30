@@ -58,7 +58,7 @@ function AdminDashboard() {
             path: "/admin/users" 
         },
         { 
-            // Reflects the 'lowStockCount' metric from your controller
+            // Reflects the 'lowStockCount' metric from your controller.
             title: "Low Stock Count", 
             value: metrics.lowStockCount ? metrics.lowStockCount.toLocaleString() : '0', 
             icon: "⚠️", 

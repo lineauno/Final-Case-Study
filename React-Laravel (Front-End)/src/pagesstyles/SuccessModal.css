@@ -40,7 +40,7 @@
     line-height: 80px;
     border-radius: 50%;
     margin: 0 auto 15px auto;
-    color: #2ecc71; /* Success Green */
+    color: #2ecc71; /* Success Green. */
 }
 
 .modal-header.success-text {

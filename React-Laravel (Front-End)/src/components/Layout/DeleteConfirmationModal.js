@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../pagesstyles/DeleteConfirmationModal.css'; // Importing the CSS we just made
+import '../../pagesstyles/DeleteConfirmationModal.css'; // Importing the CSS we just made.
 
 const DeleteConfirmationModal = ({ show, onConfirm, onCancel, itemName }) => {
     if (!show) {

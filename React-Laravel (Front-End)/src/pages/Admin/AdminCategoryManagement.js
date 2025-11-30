@@ -47,7 +47,7 @@ function AdminCategoryManagement() {
         fetchCategories();
     }, [fetchCategories]); // 💡 Now we can safely include it here
     
-    // --- CRUD HANDLERS ---
+    // --- CRUD OPERATION ---
     
     const handleAddOrUpdate = async (e) => {
         e.preventDefault();

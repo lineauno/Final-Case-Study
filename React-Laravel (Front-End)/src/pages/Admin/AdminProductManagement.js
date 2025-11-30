@@ -304,7 +304,7 @@ export default function AdminProductManagement() {
                 ) : (
                     <div className="admin-product-row"> 
                         {products.map((p) => {
-                            // Smart Image Display
+                            // Smart Image Display.
                             const absoluteImageUrl = p.image_url && p.image_url.startsWith('http')
                                 ? p.image_url 
                                 : p.image_url 
