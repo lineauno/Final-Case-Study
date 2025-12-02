@@ -1,5 +1,5 @@
 // src/pages/User/WishlistPage.js
-//namo nicolo
+
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { Link } from 'react-router-dom';
