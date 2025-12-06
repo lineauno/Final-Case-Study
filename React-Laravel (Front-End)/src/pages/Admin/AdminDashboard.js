@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-// 💡 FIXED IMPORT: Use the unified fetch function (getDashboardData must be defined in api.js)
 import { getDashboardData } from '../../services/api'; 
 import '../../pagesstyles/AdminDashboard.css';
 
+// AdminDashboard component displays key metrics and recent activities for administrators
 function AdminDashboard() {
     const [metrics, setMetrics] = useState(null);
     const [activity, setActivity] = useState([]);
@@ -13,19 +13,13 @@ function AdminDashboard() {
     useEffect(() => {
         const loadDashboardData = async () => {
             try {
-                // 1. FIX: Make a single call to the unified endpoint
                 const data = await getDashboardData(); 
                 
-                // 2. Map data based on the Controller's return structure (metrics and recentActivity)
                 setMetrics(data.metrics);
-                
-                // 3. Extract the array for activity (Controller returns recentActivity as an object containing recentUsers)
                 setActivity(data.recentActivity.recentUsers || []); 
                 
             } catch (err) {
-                // Display the user-friendly error
                 setError("Failed to load dashboard data. Check API endpoints.");
-                // Log the technical error for console debugging
                 console.error("Dashboard Data Fetch Error:", err);
             } finally {
                 setIsLoading(false);
@@ -33,10 +27,8 @@ function AdminDashboard() {
         };
 
         loadDashboardData();
-    }, []);
+    }, []); 
 
-    // Helper structure to map fetched data to the UI layout
-    // NOTE: Keys like totalProducts, totalCategories, totalUsers must match the ones returned by the controller
     const dashboardMetrics = metrics ? [
         { 
             title: "Total Products", 
@@ -51,14 +43,12 @@ function AdminDashboard() {
             path: "/admin/categories" 
         },
         { 
-            // Changed to reflect the 'totalUsers' metric returned by your controller
             title: "Total Users", 
             value: metrics.totalUsers ? metrics.totalUsers.toLocaleString() : '0', 
             icon: "👤", 
             path: "/admin/users" 
         },
         { 
-            // Reflects the 'lowStockCount' metric from your controller.
             title: "Low Stock Count", 
             value: metrics.lowStockCount ? metrics.lowStockCount.toLocaleString() : '0', 
             icon: "⚠️", 
@@ -67,7 +57,7 @@ function AdminDashboard() {
     ] : [];
 
     if (isLoading) {
-        return <div className="admin-loading1">Loading Dashboard...</div>;
+        return <div className="loading-style">Loading Dashboard...</div>;
     }
 
     if (error) {
@@ -80,6 +70,7 @@ function AdminDashboard() {
             <h2 className="welcome-heading">Welcome back, Admin!</h2>
             <p className="overview-text">Quick overview of Crafty Corner operations.</p>
             
+            {/* Grid container for displaying key metrics */}
             <div className="metrics-grid">
                 {dashboardMetrics.map((metric, index) => (
                     <Link 
@@ -94,14 +85,14 @@ function AdminDashboard() {
                 ))}
             </div>
 
-            {/* Added a section to display the recent activity */}
+            {/* Section dedicated to displaying recent user activity */}
             <section className="admin-recent-activity">
                 <h3>Recent Activity ({activity.length} Users)</h3>
                 <div className="activity-list">
                     {activity.length > 0 ? (
                         activity.map((user) => (
                             <div key={user.id} className="activity-item">
-                                New User: **{user.name}** ({user.created_at})
+                                New User: {user.name} ({user.created_at})
                             </div>
                         ))
                     ) : (

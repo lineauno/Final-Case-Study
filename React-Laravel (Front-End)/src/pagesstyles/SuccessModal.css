@@ -1,6 +1,3 @@
-/* src/styles/SuccessModal.css */
-
-/* Reuse the backdrop from your delete modal logic, or define it here */
 .modal-backdrop {
     position: fixed;
     top: 0;

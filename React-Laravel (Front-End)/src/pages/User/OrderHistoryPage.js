@@ -1,9 +1,13 @@
-// src/pages/User/OrderHistoryPage.js
-
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext'; 
+
+/**
+ * OrderHistoryPage: Component responsible for fetching and displaying a user's 
+ * past order history. It communicates with the backend API to retrieve a list of orders 
+ * and renders them in a structured, readable format.
+ */
 
 function OrderHistoryPage() {
     const [orders, setOrders] = useState([]);
@@ -37,8 +41,7 @@ function OrderHistoryPage() {
     }, [isAuthenticated]);
 
     if (isLoading) {
-        // Using basic utility classes as these are general layout components
-        return <div className="container p-8 text-center">Loading orders...</div>;
+        return <div className="loading-style">Loading orders...</div>;
     }
 
     if (error) {

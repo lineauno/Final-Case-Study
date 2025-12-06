@@ -174,8 +174,7 @@ button, input, select, textarea {
 
 .product-grid-page > .product-card {
     justify-self: center; 
-    
-    max-width: 330px; 
+    max-width: 300px; 
 }
 
 .product-card {
@@ -1373,12 +1372,12 @@ button, input, select, textarea {
 }
 
 .login-btn {
-    width: 10rem;
+    width: 30rem;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 1rem 1rem;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     font-size: 1.125rem;
     font-weight: 600;
     text-align: center;
@@ -2034,20 +2033,15 @@ button, input, select, textarea {
 }
 
 .product-category-select {
-    /* Appearance */
     border: 1px solid #ff8ba7; 
     border-radius: 5px;
     background-color: #fff; 
     font-family: inherit;
     font-size: 1rem;
-
-    /* Sizing and Spacing */
     width: 100%;
     padding: 8px 10px;
     box-sizing: border-box;
-    margin-bottom: 15px; /* Spacing below the dropdown */
-
-    /* Custom Dropdown Arrow (for consistent cross-browser appearance) */
+    margin-bottom: 15px; 
     -webkit-appearance: none; 
     -moz-appearance: none; 
     appearance: none; 
@@ -2058,7 +2052,6 @@ button, input, select, textarea {
     padding-right: 30px; 
 }
 
-/* Optional: Add a focus state for better user experience */
 .product-category-select:focus {
     outline: none;
     border-color: #ff5e87; 
@@ -2072,7 +2065,7 @@ button, input, select, textarea {
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
+    overflow: hidden; 
 }
 
 .store-card-img {
@@ -2093,3 +2086,16 @@ button, input, select, textarea {
     padding: 20px 0;
 }
 
+.loading-style {
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    height: 70vh;            
+    width: 100%;
+    font-size: 1.5rem;
+    color: #ff8ba7;          
+    font-weight: 700;
+    letter-spacing: 1px;
+    animation: pulse 1.5s infinite ease-in-out;
+    margin-top: 95px;
+}

@@ -18,15 +18,13 @@ export default function AdminProductManagement() {
         category_name: "", stock: "",       
     });
 
-    // 💡 IMAGE STATE: Two states to handle both methods
-    const [imageFile, setImageFile] = useState(null);       // For File Uploads
-    const [imageUrlInput, setImageUrlInput] = useState(""); // For Pasted Links
+    const [imageFile, setImageFile] = useState(null);       
+    const [imageUrlInput, setImageUrlInput] = useState(""); 
     
     const [isEditing, setIsEditing] = useState(false);
     const [deleteModal, setDeleteModal] = useState({ show: false, id: null, name: '' });
     const [successModal, setSuccessModal] = useState({ show: false, message: '' });
 
-    // --- API Read Functions ---
     const fetchCategories = async () => {
         try {
             const responseData = await getCategories(); 
@@ -40,11 +38,15 @@ export default function AdminProductManagement() {
         setIsLoading(true);
         try {
             const responseData = await getAdminProducts();
-            const safeProducts = (responseData.products || []).map(p => ({
+            
+            const productList = responseData.products || []; 
+
+            const safeProducts = productList.map(p => ({
                 ...p,
                 category_name: p.category_name || '', 
                 stock: p.stock !== undefined ? p.stock : 0,
             }));
+            
             setProducts(safeProducts); 
             setError(null);
         } catch (err) {
@@ -60,28 +62,24 @@ export default function AdminProductManagement() {
         fetchCategories(); 
     }, []);
 
-    // --- Form Handlers ---
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
     };
 
-    // 💡 HANDLE FILE SELECTION (Clears URL input)
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setImageFile(file);
-            setImageUrlInput(""); // Clear URL if file picked
+            setImageUrlInput(""); 
         }
     };
 
-    // 💡 HANDLE URL TYPING (Clears File input)
     const handleUrlChange = (e) => {
         const url = e.target.value;
         setImageUrlInput(url);
         if (url) {
-            setImageFile(null); // Clear file state
-            // Visually clear the file input
+            setImageFile(null); 
             const fileInput = document.getElementById('productFileInput');
             if(fileInput) fileInput.value = "";
         }
@@ -90,7 +88,6 @@ export default function AdminProductManagement() {
     const handleAddOrUpdate = async (e) => {
         e.preventDefault();
         
-        // 💡 VALIDATION: Check if we have EITHER a file OR a URL OR an existing image (edit mode)
         const hasImage = imageFile || imageUrlInput || (isEditing && form.image_url);
 
         if (!form.name || !form.price || !form.category_name || !form.stock) {
@@ -113,7 +110,6 @@ export default function AdminProductManagement() {
             formData.append('stock', parseInt(form.stock, 10));
             formData.append('category_name', form.category_name); 
 
-            // 💡 HYBRID LOGIC: Send the correct field to Laravel
             if (imageFile) {
                 formData.append('image_file', imageFile); 
             } else if (imageUrlInput) {
@@ -132,7 +128,6 @@ export default function AdminProductManagement() {
             fetchProducts(); 
         } catch (err) {
             console.error("CRUD Error:", err);
-            // Try to show the specific message from the server if available
             const msg = err.message || "Failed to save product.";
             setError(msg);
         } finally {
@@ -146,7 +141,6 @@ export default function AdminProductManagement() {
         setImageFile(null);
         setImageUrlInput("");
         setIsEditing(false);
-        // Clear file input visually
         const fileInput = document.getElementById('productFileInput');
         if(fileInput) fileInput.value = "";
     };
@@ -159,10 +153,9 @@ export default function AdminProductManagement() {
             description: product.description,
             category_name: product.category_name || "", 
             stock: String(product.stock || 0),
-            image_url: product.image_url // Track existing image
+            image_url: product.image_url 
         });
 
-        // If it's a URL link, fill the text box. If it's a file path, leave blank.
         if (product.image_url && product.image_url.startsWith('http')) {
             setImageUrlInput(product.image_url);
         } else {
@@ -186,8 +179,12 @@ export default function AdminProductManagement() {
             setSuccessModal({ show: true, message: "Product deleted successfully!" });
             setProducts(prev => prev.filter(p => p.id !== deleteModal.id));
         } catch (error) {
-            console.error("Deletion failed:", error);
-            setError("Failed to delete product on the server.");
+            console.error("Deletion failed (full error object):", error);
+            
+            // 💡 ENHANCEMENT: Try to display a more specific server message
+            const serverErrorMsg = error.response?.data?.message || error.message || "Failed to delete product on the server. Check console & network tab for details.";
+            setError(serverErrorMsg);
+            
         } finally {
             setIsLoading(false);
         }
@@ -249,7 +246,6 @@ export default function AdminProductManagement() {
                     <input type="number" name="stock" value={form.stock} onChange={handleChange} required min="0" disabled={isLoading} />
                     <p></p>
                     
-                    {/* 💡 HYBRID IMAGE INPUT */}
                     <label>Product Image</label>
                     <div className="image-input-group" style={{display:'flex', flexDirection:'column', gap:'10px'}}>
                         <input 
@@ -304,7 +300,6 @@ export default function AdminProductManagement() {
                 ) : (
                     <div className="admin-product-row"> 
                         {products.map((p) => {
-                            // Smart Image Display.
                             const absoluteImageUrl = p.image_url && p.image_url.startsWith('http')
                                 ? p.image_url 
                                 : p.image_url 

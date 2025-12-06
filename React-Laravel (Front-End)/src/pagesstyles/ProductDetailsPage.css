@@ -1,0 +1,166 @@
+/* src/pagesstyles/ProductDetailsPage.css */
+
+.details-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Back Button */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 25px;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.back-link:hover {
+    color: #d63384; /* Your theme pink */
+    transform: translateX(-5px); /* Little slide animation */
+}
+
+/* Main Grid Layout */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Split 50/50 */
+    gap: 50px;
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+/* Left: Image Area */
+.details-image-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 450px;
+}
+
+.details-product-img {
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+    transition: transform 0.3s ease;
+}
+
+.details-product-img:hover {
+    transform: scale(1.02); /* Subtle zoom on hover */
+}
+
+/* Right: Info Area */
+.details-info-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.details-title {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.details-price {
+    font-size: 2.2rem;
+    color: #d63384; /* Theme Pink */
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.details-description {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+.stock-status {
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+}
+
+.stock-status.in-stock { color: #2ecc71; }
+.stock-status.out-of-stock { color: #e74c3c; }
+
+/* Button Group */
+.details-button-group {
+    display: flex;
+    gap: 20px;
+}
+
+.primary-add-to-cart-btn {
+    padding: 16px 40px;
+    background: linear-gradient(135deg, #d63384, #c2185b);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(214, 51, 132, 0.3);
+    flex: 2;
+}
+
+.primary-add-to-cart-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(214, 51, 132, 0.4);
+}
+
+.primary-add-to-cart-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.secondary-btn {
+    padding: 16px 30px;
+    background: white;
+    color: #d63384;
+    border: 2px solid #d63384;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.secondary-btn:hover {
+    background: #fff0f6;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Design (Mobile) */
+@media (max-width: 768px) {
+    .details-grid {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+    .details-button-group {
+        flex-direction: column;
+    }
+}

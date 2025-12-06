@@ -28,19 +28,19 @@ export const AuthProvider = ({ children }) => {
         loadUser();
     }, []);
 
-    const login = async (email, password, userType) => {
-        const credentials = { email, password, userType };
+    const login = async (email, password) => { 
+        const credentials = { email, password };
         
         const response = await api.login(credentials);
         localStorage.setItem('user_token', response.token);
         
         const userWithRole = { 
             ...response.user, 
-            role: response.user.role || (email.toLowerCase().includes('admin') ? 'admin' : 'customer') 
+            role: response.user.role 
         };
         
         setUser(userWithRole);
-        navigate('/'); 
+        return userWithRole; 
     };
 
     const register = async (userData) => {

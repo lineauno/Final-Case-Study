@@ -1,47 +1,39 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext'; // Assume AuthContext is used for login state
+import { useAuth } from '../../contexts/AuthContext'; 
 
 function LoginPage() {
-    // Hooks Initialization
     const navigate = useNavigate();
-    // Assuming 'login' updates the user state globally, which includes the user's role/type.
     const { login } = useAuth(); 
     
-    // State Management
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [userType, setUserType] = useState('customer'); // Default login type
     const [error, setError] = useState('');
 
-    // Function to handle the form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
         try {
-            // 1. Execute the login function (calls backend API)
-            // The login function in AuthContext should handle setting the global user state.
-            await login(email, password, userType); 
+            const userData = await login(email, password); 
             
-            // 2. Clear fields (optional)
             setEmail('');
             setPassword('');
             
-            // 3. CRITICAL MODIFICATION: CONDITIONAL NAVIGATION
-            if (userType === 'admin') {
-                // Navigate to the new Admin Dashboard
+            if (userData && userData.role === 'Admin') { 
                 navigate('/admin/dashboard'); 
             } else {
-                // Navigate to the public site homepage for customers
                 navigate('/'); 
             }
-            // ----------------------------------------------------
 
         } catch (err) {
-            // Handle API errors (e.g., bad credentials)
-            setError('Login failed. Please check your credentials.');
             console.error("Login Error:", err);
+            
+            if (err.message && (err.message.includes('banned') || err.message.includes('Your account has been banned'))) {
+                setError('🚫 Access Denied: Your account has been banned. Please contact support.');
+            } else {
+                setError('Login failed. Please check your credentials.');
+            }
         }
     };
 
@@ -78,21 +70,10 @@ function LoginPage() {
                         />
                     </div>
 
-                    {/* Login Select and Button */}
                     <div className="login-actions">
-                        <select 
-                            className="auth-select"
-                            value={userType}
-                            onChange={(e) => setUserType(e.target.value)}
-                        > 
-                            <option value="customer">Login as Customer</option>
-                            <option value="admin">Login as Admin</option>
-                        </select>
-                        
                         <button 
                             type="submit" 
-                            // Conditional class for visual distinction (Admin vs. Customer)
-                            className={userType === 'admin' ? 'login-btn' : 'login-btn'} 
+                            className="login-btn" 
                         > 
                             Log In
                         </button>
@@ -101,7 +82,7 @@ function LoginPage() {
                 </form>
 
                 <p style={{ marginTop: '1.5rem', fontSize: '0.9rem' }}>
-                    Don't have an account?   
+                    Don't have an account? 
                     <Link to="/register" className="link-text" style={{ fontWeight: 'bold' }}>
                         Register here
                     </Link>

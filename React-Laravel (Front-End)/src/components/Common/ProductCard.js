@@ -1,51 +1,39 @@
-// src/components/Common/ProductCard.js
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../contexts/CartContext'; 
-// Assuming the toggle component exists
 import WishlistToggle from '../../pages/Products/WishlistToggle'; 
 
-// Note: Ensure this path matches the location where you defined this constant.
-const BACKEND_BASE_URL = 'http://localhost:8082'; 
+const BACKEND_BASE_URL = 'http://localhost:8083'; 
 
-// 💡 FIX 1: Component now accepts 'onAddToCartSuccess' from parent
-// 💡 FIX 2: Component now accepts 'isItemInCart' from useCart()
+// ProductCard component displays a single product item in a listing/grid
 function ProductCard({ product, initialIsWished = false, onAddToCartSuccess }) { 
     
-    // 💡 FIX 3: Correctly destructure all necessary functions/helpers from useCart()
     const { handleAddToCart, isItemInCart} = useCart();
     
-    // 1. Price Fix
     const formattedPrice = product.price 
                             ? parseFloat(product.price).toFixed(2) 
                             : '0.00'; 
     
-    // 2. Stock Check
     const stockAvailable = product.stock;
     const isOutOfStock = stockAvailable <= 0;
 
-    // 3. Image Path Logic
     const absoluteImageUrl = product.image_url && product.image_url.startsWith('http')
-        ? product.image_url // External Placeholder
+        ? product.image_url 
         : product.image_url
-            ? `${BACKEND_BASE_URL}${product.image_url}` // Local Storage
-            : `${BACKEND_BASE_URL}/assets/images/default.png`; // Fallback
+            ? `${BACKEND_BASE_URL}${product.image_url}` 
+            : `${BACKEND_BASE_URL}/assets/images/default.png`; 
 
     const isProductWished = product.is_wished || initialIsWished;
     
-    // 💡 FIX 4: Call isItemInCart safely (using the destructured function)
     const inCart = isItemInCart(product.id); 
 
 
-    // 💡 NEW: Handle Cart Addition and Success Notification
     const handleAddClick = async (e) => {
-        e.stopPropagation(); // Prevents navigating to the product details page
+        e.stopPropagation(); 
         
         try {
-            await handleAddToCart(product.id, 1); // 1. WAIT for the context/API call to complete
+            await handleAddToCart(product.id, 1); 
             
-            // 2. SUCCESS: Show the modal via the parent function
             if (onAddToCartSuccess) {
                 onAddToCartSuccess(product.name); 
             }
@@ -55,19 +43,19 @@ function ProductCard({ product, initialIsWished = false, onAddToCartSuccess }) {
         }
     };
 
-
     return (
         <div className="product-card">
             
-            {/* 🎯 WISHLIST TOGGLE CONTAINER */}
+            {/* Container for the wishlist toggle button */}
             <div className="product-wishlist-toggle">
+                {/* Renders the WishlistToggle component with necessary props */}
                 <WishlistToggle 
                     productId={product.id}
                     initialIsWished={isProductWished}
                 />
             </div>
 
-            {/* Link around the image */}
+            {/* Link wrapper for the product image, enabling navigation to details page */}
             <Link to={`/products/${product.id}`} className="product-image-link">
                 <img 
                     src={absoluteImageUrl} 
@@ -76,26 +64,41 @@ function ProductCard({ product, initialIsWished = false, onAddToCartSuccess }) {
                 />
             </Link>
             
+            {/* Container for product textual information and actions */}
             <div className="product-info">
                 
                 <h3 className="product-name">
-                    <Link to={`/products/${product.id}`}>{product.name}</Link>
+                    {/* Link for the product name */}
+                    <Link 
+                        to={`/products/${product.id}`} 
+                        style={{ textDecoration: 'none' }}
+                    >
+                        {product.name}
+                    </Link>
                 </h3>
 
+                {/* Display a truncated version of the product description */}
                 <p className="product-description-snippet">
+                    {/* Display up to 70 characters of description, appending '...' if longer */}
                     {product.description.substring(0, 70)}{product.description.length > 70 ? '...' : ''}
                 </p>
 
+                {/* Container for price and Add to Cart button */}
                 <div className="price-cart">
                     <p className="price">
+                        {/* Display the formatted price */}
                         ₱{formattedPrice}
                     </p>
                     
+                    {/* Button for Add to Cart action */}
                     <button 
+                        // Apply 'disabled' class if out of stock
                         className={`cart-btn ${isOutOfStock ? 'disabled' : ''}`}
-                        onClick={handleAddClick} // 💡 Calls the new handler
+                        onClick={handleAddClick} 
+                        // Disable button if out of stock OR if the item is already in the cart
                         disabled={isOutOfStock || inCart}
                     >
+                        {/* Dynamic button text based on stock and cart status */}
                         {isOutOfStock ? 'Out of Stock' : (inCart ? 'In Cart' : 'Add to Cart')}
                     </button>
                 </div>

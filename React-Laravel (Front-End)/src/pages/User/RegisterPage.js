@@ -1,5 +1,3 @@
-// src/pages/User/Register.js
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -13,7 +11,6 @@ function RegisterPage() {
     const { register, isAuthenticated } = useAuth();
     const navigate = useNavigate();
 
-    // Redirect if already authenticated
     if (isAuthenticated) {
         navigate('/');
         return null;
@@ -30,7 +27,6 @@ function RegisterPage() {
 
         try {
             await register(formData);
-            // Registration successful, AuthContext handles navigation
         } catch (err) {
             setError(err.message || "Registration failed. Please check your data.");
         } finally {

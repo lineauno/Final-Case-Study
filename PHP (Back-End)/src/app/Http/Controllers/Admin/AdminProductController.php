@@ -15,23 +15,22 @@ class AdminProductController extends Controller
     {
         try {
             $products = Product::with('category')->get();
-            
+
             $products->map(function ($product) {
                 if ($product->image_url) {
-                    if (str_starts_with($product->image_url, 'http') || str_starts_with($product->image_url, '/assets')) {
-                        $product->image_url = $product->image_url;
-                    } else {
+                    if (!(str_starts_with($product->image_url, 'http') || str_starts_with($product->image_url, '/assets'))) {
                         $product->image_url = Storage::url($product->image_url);
                     }
                 } else {
                     $product->image_url = null;
                 }
                 
+                $product->stock = $product->stock ?? 0;
                 $product->category_name = $product->category->name ?? 'Uncategorized';
                 return $product;
             });
             
-            return response()->json(['products' => $products], 200);
+            return response()->json(['products' => $products], 200); 
 
         } catch (\Exception $e) {
             Log::error('AdminProductController index error: ' . $e->getMessage());

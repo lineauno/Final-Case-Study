@@ -1,12 +1,7 @@
-// src/components/Common/Header.js
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext'; 
-
-// --- SVG Definitions (Icons) ---
-// Note: Home Icon was already removed in the previous step.
 
 // Product Icon SVG
 const ProductIcon = ({ size = 22 }) => (

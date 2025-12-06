@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order; 
 use App\Models\Cart; 
+use App\Models\Product;
 use Illuminate\Support\Facades\DB; 
 use Illuminate\Database\Eloquent\ModelNotFoundException; 
 
@@ -30,6 +31,19 @@ class OrderController extends Controller
 
         try {
             DB::beginTransaction();
+            
+            foreach ($cart->items as $item) {
+                $product = $item->product;
+                $quantity = $item->quantity;
+
+                if ($product->stock < $quantity) {
+                    DB::rollback();
+                    return response()->json(['message' => "Insufficient stock for product: {$product->name}. Only {$product->stock} remaining."], 409);
+                }
+
+                $product->stock -= $quantity;
+                $product->save();
+            }
 
             $order = Order::create([
                 'user_id' => $user->id,
@@ -54,7 +68,7 @@ class OrderController extends Controller
             $cart->items()->delete();
             $cart->delete();
             
-            DB::commit();
+            DB::commit(); 
 
             return response()->json([
                 'message' => 'Order placed successfully!',
@@ -70,14 +84,14 @@ class OrderController extends Controller
     }
     
     public function index()
-        {
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    $orders = Order::where('user_id', $user->id)
-                   ->with(['items.product']) 
-                   ->latest()
-                   ->get();
+        $orders = Order::where('user_id', $user->id)
+                       ->with(['items.product']) 
+                       ->latest()
+                       ->get();
 
-    return response()->json($orders, 200); 
-}
+        return response()->json($orders, 200); 
+    }
 }
