@@ -10,7 +10,6 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    // POST /api/register
     public function register(Request $request)
     {
         $request->validate([
@@ -33,13 +32,11 @@ class AuthController extends Controller
         ], 201);
     }
 
-    // POST /api/login
     public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
-            'userType' => 'nullable|in:customer,admin',
         ]);
 
         $user = User::where('email', $request->email)->first();
@@ -49,16 +46,30 @@ class AuthController extends Controller
                 'email' => ['Invalid login credentials.'],
             ]);
         }
+
+        if ($user->is_banned) {
+            return response()->json([
+                'message' => 'Your account has been banned. Please contact support.'
+            ], 403);
+        }
     
         $user->tokens()->delete(); 
         
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        $role = $user->is_admin ? 'Admin' : 'Customer'; 
+
         return response()->json([
-            'user' => $user,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $role,     
+                'is_admin' => $user->is_admin, 
+                'is_banned' => $user->is_banned,
+            ],
             'token' => $token,
         ]);
-   
     }
 
     public function logout(Request $request)
