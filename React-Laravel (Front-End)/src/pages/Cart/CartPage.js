@@ -5,53 +5,51 @@ import CartItem from '../../components/Cart/CartItem';
 import DeleteConfirmationModal from '../../components/Layout/DeleteConfirmationModal';
 import SuccessModal from '../../components/Layout/SuccessModal';
 
-/**
- * CartPage: Displays the user's shopping cart contents, total, and checkout actions.
- * It integrates with the CartContext for data and CRUD operations, and uses modals 
- * for confirmation before item removal.
- */
+// 💡 Define Backend URL for Smart Image Logic
+const BACKEND_BASE_URL = 'http://localhost:8082';
+
 function CartPage() {
-    /* * --- Cart Context  ---
-     * Destructure necessary values and handlers from the CartContext. 
-     * handleRemoveFromCart is the key function for deleting items via API.
-     */
     const { cart, cartCount, isLoading, cartTotal, handleRemoveFromCart } = useCart(); 
     
-    /* --- MODAL STATE -- */
     const [deleteModal, setDeleteModal] = useState({ show: false, id: null, name: '' });
     const [successModal, setSuccessModal] = useState({ show: false, message: '' });
     const [isProcessing, setIsProcessing] = useState(false);
 
-    // --- DELETE LOGIC ---
-    
-    /* * initiateDelete: Function passed to CartItem to be called when the trash icon is clicked.
-     * It extracts the product ID and sets the state to display the DeleteConfirmationModal.
-     * It prioritizes 'product_id' which is typically the unique cart item identifier on the backend.
-     */
+    // --- HELPER FUNCTION: Smart Image Logic for a single item ---
+    const getCorrectedImageUrl = (rawUrl) => {
+        if (!rawUrl) {
+            return `${BACKEND_BASE_URL}/assets/images/default.png`;
+        }
+        
+        // If the URL doesn't start with 'http', assume it's a local/storage path that needs the base URL.
+        if (!rawUrl.startsWith('http')) {
+            const correctedPath = rawUrl.startsWith('/') ? rawUrl : `/${rawUrl}`;
+            return `${BACKEND_BASE_URL}${correctedPath}`;
+        }
+        
+        return rawUrl;
+    };
+
+    // --- Main Logic ---
+
     const initiateDelete = (item) => {
         const targetId = item.product_id || item.id;
         
         setDeleteModal({
             show: true,
-            id: targetId,           
+            id: targetId,         
             name: item.product.name 
         });
     };
 
-    /* * confirmDelete: Executes the asynchronous item removal after user confirmation.
-     * It closes the confirmation modal, sets processing state, calls the context's removal handler, 
-     * and displays a success notification.
-     */
     const confirmDelete = async () => {
         const idToDelete = deleteModal.id;
-        setDeleteModal({ show: false, id: null, name: '' }); // Close confirm modal
+        setDeleteModal({ show: false, id: null, name: '' }); 
         setIsProcessing(true);
 
         try {
-            // Call Context function to delete from DB
             await handleRemoveFromCart(idToDelete);
             
-            // Show success message
             setSuccessModal({ show: true, message: "Item removed from cart!" });
         } catch (error) {
             console.error("Failed to remove item:", error);
@@ -60,19 +58,24 @@ function CartPage() {
         }
     };
 
-    /* * cancelDelete: Closes the confirmation modal without performing any action.
-     */
     const cancelDelete = () => {
         setDeleteModal({ show: false, id: null, name: '' });
     };
 
-    /* * closeSuccessModal: Closes the success notification modal.
-     */
     const closeSuccessModal = () => {
         setSuccessModal({ show: false, message: '' });
     };
 
-    // --- Conditional Rendering ---
+    // --- Map Cart Items and Apply Smart Image Feature ---
+    const processedCart = cart.map(item => ({
+        ...item,
+        product: {
+            ...item.product,
+            // 💡 Apply the smart logic to fix the image URL before rendering the CartItem
+            image_url: getCorrectedImageUrl(item.product.image_url)
+        }
+    }));
+
 
     if (isLoading) {
         return <div className="cart-page-container" style={{textAlign:'center', padding:'50px'}}>Loading cart...</div>;
@@ -93,14 +96,9 @@ function CartPage() {
         );
     }
 
-    /* * --- Main Render ---
-     * Renders the CartPage with the list of CartItem components, the total summary, 
-     * and the checkout/shopping links. Modals are placed at the top level of the return for overlay display.
-     */
     return (
         <div className="cart-page-container">
             
-            {/* RENDER MODALS */}
             <DeleteConfirmationModal 
                 show={deleteModal.show} 
                 onConfirm={confirmDelete} 
@@ -117,7 +115,8 @@ function CartPage() {
             <h1 className="cart-title-brand">Your Shopping Cart ({cartCount} Items)</h1>
             
             <div className="cart-items-box">
-                {cart.map(item => (
+                {/* 💡 Use the processedCart array */}
+                {processedCart.map(item => (
                     <CartItem 
                         key={item.product_id} 
                         item={item} 

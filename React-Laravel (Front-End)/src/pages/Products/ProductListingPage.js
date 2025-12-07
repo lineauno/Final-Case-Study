@@ -4,7 +4,10 @@ import ProductCard from '../../components/Common/ProductCard';
 import api from '../../services/api';
 
 import SuccessModal from '../../components/Layout/SuccessModal';
-import '../../pagesstyles/HomePage.css';
+//import '../../pagesstyles/HomePage.css';
+
+// 💡 Define Backend URL for Smart Image Logic
+const BACKEND_BASE_URL = 'http://localhost:8082';
 
 /**
  * ProductListingPage: This component displays a grid of all available products.
@@ -20,30 +23,59 @@ function ProductListingPage() {
     
     const [successModal, setSuccessModal] = useState({ show: false, message: '' });
 
+    // --- HELPER FUNCTION: Smart Image Logic ---
+    // This function applies the logic to the entire product array
+    const applySmartImageLogic = (productsArray) => {
+        if (!Array.isArray(productsArray)) return [];
+
+        return productsArray.map(product => {
+            let fullImageUrl = product.image_url;
+
+            if (fullImageUrl) {
+                // If the URL doesn't start with 'http', we assume it's a local/storage path that needs the base URL.
+                if (!fullImageUrl.startsWith('http')) {
+                    // Ensure the path has a leading slash before prepending the base URL
+                    const correctedPath = fullImageUrl.startsWith('/') ? fullImageUrl : `/${fullImageUrl}`;
+                    fullImageUrl = `${BACKEND_BASE_URL}${correctedPath}`;
+                }
+            } else {
+                // Use a default image if no URL is provided
+                fullImageUrl = `${BACKEND_BASE_URL}/assets/images/default.png`;
+            }
+
+            return {
+                ...product,
+                image_url: fullImageUrl // Override the product's image_url with the absolute URL
+            };
+        });
+    };
+
     useEffect(() => {
         if (products) {
-            setDisplayedProducts(products);
+            // 💡 1. Apply the smart image logic when initial products are loaded
+            setDisplayedProducts(applySmartImageLogic(products));
         }
     }, [products]);
 
     /* * --- Search Logic ---
      * handleSearch: Executes the product search by calling the dedicated search API endpoint
-     * with the current `searchQuery`. It handles common backend response structures (like Laravel's pagination 
-     * object containing a `.data` array) and updates `displayedProducts` with the results.
+     * with the current `searchQuery`. 
      */
     const handleSearch = async () => {
         try {
             console.log("Searching for:", searchQuery);
             const results = await api.searchProducts(searchQuery);
 
-            // Handle Laravel Pagination Structure (.data)
+            let searchData = [];
+            // Handle Laravel Pagination Structure (.data) or raw array
             if (results && results.data && Array.isArray(results.data)) {
-                setDisplayedProducts(results.data);
+                searchData = results.data;
             } else if (Array.isArray(results)) {
-                setDisplayedProducts(results);
-            } else {
-                setDisplayedProducts([]);
+                searchData = results;
             }
+            
+            // 💡 2. Apply the smart image logic to search results as well
+            setDisplayedProducts(applySmartImageLogic(searchData));
 
         } catch (err) {
             console.error("Search error:", err);
@@ -60,10 +92,7 @@ function ProductListingPage() {
     };
 
     /* * --- Success Notification Handlers ---
-     * showSuccessNotification: This function is passed as a prop to each `ProductCard`. 
-     * It is responsible for setting the state to display the success modal with a confirmation message 
-     * after an item is successfully added to the cart within the card component.
-     * closeSuccessModal: Hides the success modal.
+     * showSuccessNotification: Displays the success modal after an item is added to the cart.
      */
     const showSuccessNotification = (productName) => {
         setSuccessModal({ 
@@ -76,17 +105,11 @@ function ProductListingPage() {
         setSuccessModal({ show: false, message: '' });
     };
 
-    /* * --- Conditional Rendering ---
-     * Displays a loading message while data is being fetched or an error message if the fetch fails.
-     */
+    /* * --- Conditional Rendering --- */
     if (isLoading) return <div className="loading-style">Loading All Products...</div>;
     if (error) return <div className="error-message">{error}</div>;
 
-    /* * --- Main Render Structure ---
-     * Renders the Success Modal, the search bar interface, and the product grid. 
-     * It maps over `displayedProducts` to render a `ProductCard` for each, passing the 
-     * `showSuccessNotification` handler down to allow child components to trigger the notification.
-     */
+    /* * --- Main Render Structure --- */
     return (
         <div className="products-page"> 
             
@@ -121,6 +144,7 @@ function ProductListingPage() {
                 {displayedProducts.map(product => (
                     <ProductCard 
                         key={product.id} 
+                        // The product passed here now has the absolute image URL
                         product={product} 
                         onAddToCartSuccess={showSuccessNotification} 
                     />
