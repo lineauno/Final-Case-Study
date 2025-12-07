@@ -4,7 +4,7 @@ import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import DeleteConfirmationModal from '../../components/Layout/DeleteConfirmationModal';
 import SuccessModal from '../../components/Layout/SuccessModal';
 
-const BACKEND_BASE_URL = 'http://localhost:8082'; 
+const BACKEND_BASE_URL = 'http://localhost:8083'; 
 
 export default function AdminProductManagement() {
     
@@ -18,6 +18,7 @@ export default function AdminProductManagement() {
         category_name: "", stock: "",       
     });
 
+    // IMAGE STATE
     const [imageFile, setImageFile] = useState(null);       
     const [imageUrlInput, setImageUrlInput] = useState(""); 
     
@@ -25,6 +26,7 @@ export default function AdminProductManagement() {
     const [deleteModal, setDeleteModal] = useState({ show: false, id: null, name: '' });
     const [successModal, setSuccessModal] = useState({ show: false, message: '' });
 
+    // --- API Read Functions ---
     const fetchCategories = async () => {
         try {
             const responseData = await getCategories(); 
@@ -39,6 +41,7 @@ export default function AdminProductManagement() {
         try {
             const responseData = await getAdminProducts();
             
+            // Fixed: Use 'products' key for the product list API
             const productList = responseData.products || []; 
 
             const safeProducts = productList.map(p => ({
@@ -62,6 +65,7 @@ export default function AdminProductManagement() {
         fetchCategories(); 
     }, []);
 
+    // --- Form Handlers ---
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
