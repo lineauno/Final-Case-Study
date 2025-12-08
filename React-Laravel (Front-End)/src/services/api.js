@@ -1,8 +1,17 @@
 const LARAVEL_HOST = 'http://localhost:8082'; 
 const API_URL = `${LARAVEL_HOST}/api`;
 
+/**
+ * Helper to retrieve the Bearer token from browser localStorage.
+ */
 const getToken = () => localStorage.getItem('user_token');
 
+/**
+ * Core request handler.
+ * * Orchestrates all outgoing fetch calls. 
+ * Standardizes headers (JSON vs FormData), injects authentication tokens, 
+ * processes query parameters, and handles global status errors (204, 422, etc.).
+ */
 const request = async (endpoint, method = 'GET', data = null, params = null) => {
     let url = `${API_URL}${endpoint}`;
     if (params) {
@@ -42,6 +51,11 @@ const request = async (endpoint, method = 'GET', data = null, params = null) => 
         
         if (response.status === 204) return null; 
         
+        /**
+         * Validation Error Handler (422)
+         * Extracts Laravel validation errors and formats the first relevant 
+         * message for immediate UI feedback.
+         */
         if (!response.ok && response.status === 422) {
             const validationErrors = await response.json();
             const firstError = validationErrors.errors ? validationErrors.errors[Object.keys(validationErrors.errors)[0]][0] : 'Validation failed.';
@@ -62,6 +76,11 @@ const request = async (endpoint, method = 'GET', data = null, params = null) => 
     }
 };
 
+/**
+ * Service Object Definition
+ * * Groups individual API endpoints by logical module: 
+ * Auth, Products, Orders, Wishlist, and Admin oversight.
+ */
 const api = {
     // --- AUTH & USER ---
     login: (credentials) => request('/login', 'POST', credentials),
@@ -99,7 +118,7 @@ const api = {
     getAdminProducts: (params) => request('/admin/products', 'GET', null, params), 
     getAdminProduct: (id) => request(`/admin/products/${id}`),
     createProduct: (data) => request('/admin/products', 'POST', data), 
-    updateProduct: (id, data) => request(`/admin/products/${id}`, 'POST', data), // Using POST + _method=PUT
+    updateProduct: (id, data) => request(`/admin/products/${id}`, 'POST', data),
     deleteProduct: (id) => request(`/admin/products/${id}`, 'DELETE'),
     
     // --- ADMIN CATEGORIES ---
@@ -125,33 +144,28 @@ const api = {
     updateProductStock: (id, data) => request(`/admin/inventory/${id}/stock`, 'PUT', data),
 };
 
+/**
+ * Named Exports
+ * Destructures the api object for cleaner imports within components.
+ */
 export const { 
-    // Auth and User
     login,
     register,
     logout,
     fetchUser,
     updateProfile,
-
-    // Public Products
     getProducts,
     getProductById,
     searchProducts,
-
-    // Cart & Orders
     getCart,
     addToCart,
     updateCartItem,
     removeFromCart,
     checkout,
     getOrders,
-
-    // Wishlist
     getWishlist,
     addToWishlist,
     removeFromWishlist,
-
-    // Admin Dashboard & Products
     getDashboardData,
     getAdminMetrics, 
     getRecentActivity, 
@@ -159,22 +173,16 @@ export const {
     createProduct, 
     updateProduct, 
     deleteProduct, 
-    
-    // Admin Categories
     getCategories,
     getAdminCategories,
     createCategory,
     updateCategory,
     deleteCategory,
-    
-    // Admin User Management
     getAdminUsers,
     getAdminUser,
     updateAdminUser,
     deleteAdminUser,
     toggleBan,
-
-    // Admin Inventory
     getInventoryPaginatedProducts, 
     getLowStockProducts,
     updateProductStock

@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Log;
 
 class AdminProductController extends Controller
 {
+    /**
+     * Retrieves all products with their associated category relationships.
+     * Iterates through the collection to normalize image URLs (handling storage vs external links)
+     * and ensures fallback values for stock and category names.
+     */
     public function index()
     {
         try {
@@ -38,6 +43,11 @@ class AdminProductController extends Controller
         }
     }
 
+    /**
+     * Handles the creation of a new product.
+     * Validates input data, performs a case-insensitive lookup for the category,
+     * and processes either an uploaded image file or a provided image URL.
+     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -84,6 +94,11 @@ class AdminProductController extends Controller
         }
     }
 
+    /**
+     * Updates an existing product.
+     * Manages category updates and image replacements (deleting old local files if a new file is uploaded).
+     * Returns the refreshed product instance upon success.
+     */
     public function update(Request $request, Product $product)
     {
         $validatedData = $request->validate([
@@ -134,6 +149,11 @@ class AdminProductController extends Controller
         }
     }
     
+    /**
+     * Deletes a specific product.
+     * Ensures that if the product had a locally stored image, the physical file is removed from storage
+     * before the record is deleted from the database.
+     */
     public function destroy(Product $product)
     {
         try {

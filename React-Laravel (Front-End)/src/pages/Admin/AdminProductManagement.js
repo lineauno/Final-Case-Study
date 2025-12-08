@@ -4,10 +4,23 @@ import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import DeleteConfirmationModal from '../../components/Layout/DeleteConfirmationModal';
 import SuccessModal from '../../components/Layout/SuccessModal';
 
-const BACKEND_BASE_URL = 'http://localhost:8083'; 
+const BACKEND_BASE_URL = 'http://localhost:8082'; 
 
+/**
+ * AdminProductManagement Component
+ * Provides a comprehensive administrative dashboard for product CRUD operations.
+ * Manages product metadata, category association, and a dual-stream image 
+ * handling system (local file uploads or external URLs).
+ */
 export default function AdminProductManagement() {
     
+    /**
+     * Component State Management
+     * - products/categories: Core data collections retrieved from the backend.
+     * - form: Manages text-based product input fields.
+     * - image states: Tracks local file objects vs. external URL strings.
+     * - visibility flags: Controls loading screens and workflow modals.
+     */
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]); 
     const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +31,6 @@ export default function AdminProductManagement() {
         category_name: "", stock: "",       
     });
 
-    // IMAGE STATE
     const [imageFile, setImageFile] = useState(null);       
     const [imageUrlInput, setImageUrlInput] = useState(""); 
     
@@ -26,7 +38,12 @@ export default function AdminProductManagement() {
     const [deleteModal, setDeleteModal] = useState({ show: false, id: null, name: '' });
     const [successModal, setSuccessModal] = useState({ show: false, message: '' });
 
-    // --- API Read Functions ---
+    /**
+     * API Read Orchestration
+     * - fetchCategories: Retrieves the lookup list for the category dropdown.
+     * - fetchProducts: Retrieves the full administrative catalog, standardizing
+     * data types (stock integers) and mapping nested relation names.
+     */
     const fetchCategories = async () => {
         try {
             const responseData = await getCategories(); 
@@ -40,8 +57,6 @@ export default function AdminProductManagement() {
         setIsLoading(true);
         try {
             const responseData = await getAdminProducts();
-            
-            // Fixed: Use 'products' key for the product list API
             const productList = responseData.products || []; 
 
             const safeProducts = productList.map(p => ({
@@ -65,7 +80,12 @@ export default function AdminProductManagement() {
         fetchCategories(); 
     }, []);
 
-    // --- Form Handlers ---
+    /**
+     * Input Synchronization Handlers
+     * handleChange: Generic text input state update.
+     * handleFileChange: Captures local file objects and clears URL input conflict.
+     * handleUrlChange: Updates external URL string and clears local file conflict.
+     */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
@@ -89,6 +109,12 @@ export default function AdminProductManagement() {
         }
     };
 
+    /**
+     * Submission Orchestration
+     * Aggregates standard fields and conditional image assets into a FormData object.
+     * Dispatches requests based on 'isEditing' toggle, utilizing HTTP spoofing 
+     * (_method: PUT) for file-inclusive updates.
+     */
     const handleAddOrUpdate = async (e) => {
         e.preventDefault();
         
@@ -149,6 +175,11 @@ export default function AdminProductManagement() {
         if(fileInput) fileInput.value = "";
     };
 
+    /**
+     * Component Navigation & Deletion Handlers
+     * handleEdit: Hydrates the form state with current product record data.
+     * confirmDelete: executes hard deletion via API and optimistically updates UI state.
+     */
     const handleEdit = (product) => {
         setForm({ 
             id: product.id, 
@@ -170,7 +201,6 @@ export default function AdminProductManagement() {
         setIsEditing(true);
     };
 
-    // --- DELETE ---
     const handleDeleteClick = (product) => {
         setDeleteModal({ show: true, id: product.id, name: product.name });
     };
@@ -183,12 +213,9 @@ export default function AdminProductManagement() {
             setSuccessModal({ show: true, message: "Product deleted successfully!" });
             setProducts(prev => prev.filter(p => p.id !== deleteModal.id));
         } catch (error) {
-            console.error("Deletion failed (full error object):", error);
-            
-            // 💡 ENHANCEMENT: Try to display a more specific server message
-            const serverErrorMsg = error.response?.data?.message || error.message || "Failed to delete product on the server. Check console & network tab for details.";
+            console.error("Deletion failed:", error);
+            const serverErrorMsg = error.response?.data?.message || error.message || "Failed to delete product.";
             setError(serverErrorMsg);
-            
         } finally {
             setIsLoading(false);
         }
@@ -218,7 +245,6 @@ export default function AdminProductManagement() {
                 onClose={closeSuccessModal}
             />
             
-            {/* Left - Add/Edit Form */}
             <section className="admin-card form-card">
                 <h2>{isEditing ? "Edit Product" : "Add Product"}</h2>
                 <form onSubmit={handleAddOrUpdate}> 
@@ -269,7 +295,6 @@ export default function AdminProductManagement() {
                         />
                     </div>
                     
-                    {/* Previews */}
                     {(isEditing && !imageFile && !imageUrlInput && form.image_url) && (
                         <p className="current-image-note">Current Image: Saved</p>
                     )}
@@ -292,7 +317,6 @@ export default function AdminProductManagement() {
                 </form>
             </section>
 
-            {/* Right - Product Grid */}
             <section className="admin-card product-grid-section">
                 <h2>Existing Products</h2>
                 

@@ -2,9 +2,21 @@ import React, { useState } from 'react';
 import api from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 
-// ProfileForm component handles user profile data submission (name, email, and optional password change)
+/**
+ * ProfileForm Component
+ * Renders an interface for authenticated users to update their account details.
+ * Manages form state, input validation feedback from the server, and 
+ * conditional password persistence logic.
+ */
 function ProfileForm({ initialData }) {
     const { setUser } = useAuth();
+    
+    /**
+     * Component State Management
+     * - formData: Synchronizes local input values for name, email, and password.
+     * - status flags: Tracks submission progress, global messages, and errors.
+     * - validationErrors: Stores specific field-level errors returned by the backend.
+     */
     const [formData, setFormData] = useState({
         name: initialData.name,
         email: initialData.email,
@@ -14,14 +26,23 @@ function ProfileForm({ initialData }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
-
     const [validationErrors, setValidationErrors] = useState({});
 
+    /**
+     * Generic input change handler.
+     * Updates form state and proactively clears validation errors for the targeted field.
+     */
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         setValidationErrors((prevErrors) => ({ ...prevErrors, [e.target.name]: null }));
     };
 
+    /**
+     * Profile Update Submission Logic
+     * Filters out blank password fields to avoid unintentional overwrites.
+     * Dispatches data to the profile service and updates the global AuthContext 
+     * with the refreshed user record upon success.
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -47,7 +68,6 @@ function ProfileForm({ initialData }) {
                 } else {
                     setMessage('Validation failed. Check server response.');
                 }
-                
                 setIsError(true);
             } else {
                 setMessage(err.message || 'Failed to update profile due to a server error.');
@@ -60,36 +80,26 @@ function ProfileForm({ initialData }) {
 
     return (
         <form onSubmit={handleSubmit} className="profile-update-form">
-            {/* Conditional rendering for status messages (success or error) */}
             {(message || isError) && (
                 <div className={isError ? "error-message" : "success-message"}>{message}</div>
             )}
             
-            {/* Name Input Field */}
             <label>Name</label>
             <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-            {/* Display validation error for the name field if present */}
             {validationErrors.name && <p className="validation-error">{validationErrors.name[0]}</p>}
             
-            {/* Email Input Field */}
             <label>Email</label>
             <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-            {/* Display validation error for the email field if present */}
             {validationErrors.email && <p className="validation-error">{validationErrors.email[0]}</p>}
             
-            {/* New Password Input Field */}
             <label>New Password (Leave blank to keep current)</label>
             <input type="password" name="password" value={formData.password} onChange={handleChange} />
-            {/* Display validation error for the password field if present */}
             {validationErrors.password && <p className="validation-error">{validationErrors.password[0]}</p>}
             
-            {/* Confirm New Password Input Field */}
             <label>Confirm New Password</label>
             <input type="password" name="password_confirmation" value={formData.password_confirmation} onChange={handleChange} />
-            {/* Display validation error for the password_confirmation field if present */}
             {validationErrors.password_confirmation && <p className="validation-error">{validationErrors.password_confirmation[0]}</p>}
 
-            {/* Submission button, disabled during API call */}
             <button type="submit" disabled={isSubmitting} className="save-changes-btn" style={{ marginTop: '1.5rem' }}>
                 {isSubmitting ? 'Updating...' : 'Save Changes'}
             </button>

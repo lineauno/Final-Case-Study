@@ -11,29 +11,35 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    /**
+     * Compiles administrative dashboard metrics and recent activity data.
+     * * This method aggregates statistics across the Product, Category, and User models,
+     * calculates low stock alerts based on a set threshold, and retrieves the most 
+     * recently registered users.
+     */
     public function index()
-{
-    try {
-        $lowStockThreshold = 10;
-        
-        $totalProducts = Product::count();
-        $totalCategories = Category::count();
-        $totalUsers = User::count();
-        
-        $totalRevenue = 0;
-        
-        $lowStockCount = Product::where('stock', '<', $lowStockThreshold)->count();
+    {
+        try {
+            $lowStockThreshold = 10;
+            
+            $totalProducts = Product::count();
+            $totalCategories = Category::count();
+            $totalUsers = User::count();
+            
+            $totalRevenue = 0;
+            
+            $lowStockCount = Product::where('stock', '<', $lowStockThreshold)->count();
 
-        $recentUsers = User::orderBy('created_at', 'desc')->limit(5)->get(['id', 'name', 'created_at']);
+            $recentUsers = User::orderBy('created_at', 'desc')->limit(5)->get(['id', 'name', 'created_at']);
 
-        $dashboardData = [
-            'metrics' => [
-                'totalProducts' => $totalProducts,
-                'totalCategories' => $totalCategories,
-                'totalUsers' => $totalUsers,
-                'totalRevenue' => $totalRevenue,
-                'lowStockCount' => $lowStockCount,
-            ],
+            $dashboardData = [
+                'metrics' => [
+                    'totalProducts' => $totalProducts,
+                    'totalCategories' => $totalCategories,
+                    'totalUsers' => $totalUsers,
+                    'totalRevenue' => $totalRevenue,
+                    'lowStockCount' => $lowStockCount,
+                ],
                 'recentActivity' => [
                     'recentUsers' => $recentUsers,
                 ]

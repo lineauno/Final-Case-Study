@@ -7,27 +7,31 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Executes the creation of the 'orders' table schema.
+     * * Establishes a foreign key link to the user entity to track order ownership. 
+     * Configures storage for the shipping address snapshot, financial totals, 
+     * and a dynamic fulfillment status field which defaults to 'Pending'.
      */
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            // Link to the user who placed the order
             $table->foreignId('user_id')
-                  ->constrained() // Assumes a 'users' table exists
+                  ->constrained()
                   ->onDelete('cascade'); 
             
-            $table->text('shipping_address'); // Stores the address provided at checkout
-            $table->decimal('order_total', 10, 2); // Stores the final total price
-            $table->string('status')->default('Pending'); // Initial status (e.g., Pending, Processing, Shipped)
+            $table->text('shipping_address');
+            $table->decimal('order_total', 10, 2);
+            $table->string('status')->default('Pending');
             
             $table->timestamps();
         });
     }
 
     /**
-     * Reverse the migrations.
+     * Drops the 'orders' table from the database.
+     * * Reverses the table creation during a migration rollback, deleting 
+     * all historical order data and associated fulfillment records.
      */
     public function down(): void
     {

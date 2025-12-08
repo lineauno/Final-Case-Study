@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
+    /**
+     * Updates the authenticated user's profile information.
+     * * Extracts name and email from the validated request. If a new password 
+     * is provided, it is securely hashed before persistence. The method 
+     * returns the refreshed user model instance.
+     */
     public function updateProfile(UpdateProfileRequest $request)
     {
         $user = $request->user();
@@ -26,6 +32,11 @@ class ProfileController extends Controller
         ]);
     }
 
+    /**
+     * Retrieves the current authenticated user's details.
+     * * Returns a JSON representation of the user currently logged 
+     * into the system session.
+     */
     public function show()
     {
         return response()->json([

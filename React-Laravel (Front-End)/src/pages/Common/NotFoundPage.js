@@ -1,6 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+/**
+ * NotFoundPage Component
+ * * Renders a fallback UI (404 error) when the user navigates to a URL 
+ * that does not match any existing routes. It provides context for the error 
+ * and a direct link to return to the application's root homepage.
+ */
 function NotFoundPage() {
     return (
         <div style={{ textAlign: 'center', padding: '100px 20px', minHeight: '80vh' }}>

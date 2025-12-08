@@ -1,26 +1,36 @@
-/* Modal Background */
+/**
+ * Modal Backdrop logic
+ * Uses 'position: fixed' to decouple the element from the document flow, 
+ * ensuring it persists in the viewport. Employs semi-transparent 
+ * background-color and backdrop-filter (blur) to diminish background 
+ * distraction and emphasize the interactive dialog.
+ */
 .modal-backdrop {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+    background-color: rgba(0, 0, 0, 0.5); 
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Ensure it covers everything */
-    backdrop-filter: blur(2px); /* Optional: adds a nice blur to background */
+    z-index: 1000; 
+    backdrop-filter: blur(2px); 
 }
 
-/* Modal Box */
+/**
+ * Modal Box & Presentation
+ * Defines the physical container for the dialog. Features a 'popIn' 
+ * scale animation to create a modern, reactive UI feel.
+ */
 .modal-content {
     background-color: white;
-    border-radius: 15px; /* Rounded corners */
+    border-radius: 15px; 
     padding: 25px;
     width: 90%;
     max-width: 400px;
-    box-shadow: 0 10px 30px rgba(255, 139, 167, 0.5); /* Pink shadow accent */
+    box-shadow: 0 10px 30px rgba(255, 139, 167, 0.5); 
     text-align: center;
     animation: popIn 0.3s ease;
 }
@@ -31,7 +41,7 @@
 }
 
 .modal-header {
-    color: #ff4b78; /* Darker pink for emphasis */
+    color: #ff4b78; 
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
@@ -53,7 +63,12 @@
     margin-top: 5px;
 }
 
-/* Action Buttons */
+/**
+ * Action Control Group
+ * Utilizes a flex container with 'flex: 1' children to ensure 
+ * confirmation and cancellation buttons share equal width regardless 
+ * of label length.
+ */
 .modal-actions {
     display: flex;
     justify-content: space-between;
@@ -80,8 +95,13 @@
     background: #e0e0e0;
 }
 
+/**
+ * Confirmation (Destructive) Styling
+ * High-emphasis pink coloring serves as a visual warning for 
+ * irreversible data deletion actions.
+ */
 .confirm-button {
-    background: #ff6f91; /* Reddish pink for confirmation/danger. */
+    background: #ff6f91; 
     color: white;
 }
 

@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Storage;
 
 class CartController extends Controller
 {
+    /**
+     * Internal helper to fetch, calculate, and format the user's shopping cart.
+     * Synchronizes local and external image URLs, filters out orphaned items,
+     * and calculates total price and quantity.
+     * * @return \Illuminate\Http\JsonResponse
+     */
     protected function fetchFormattedCart()
     {
         $cart = Auth::user()->cart()->with('items.product')->firstOrCreate(['user_id' => Auth::id()]);
@@ -50,11 +56,19 @@ class CartController extends Controller
         ]);
     }
 
+    /**
+     * Endpoint to retrieve the current authenticated user's cart.
+     * Delegates logic to fetchFormattedCart to maintain a standard response structure.
+     */
     public function getCart()
     {
         return $this->fetchFormattedCart();
     }
 
+    /**
+     * Adds a product to the user's cart or increments quantity if it exists.
+     * Validates existence and quantity minimums before updating the cart items.
+     */
     public function addToCart(Request $request)
     {
         $request->validate([
@@ -82,6 +96,10 @@ class CartController extends Controller
         return $this->fetchFormattedCart();
     }
 
+    /**
+     * Updates the quantity of a specific item within the cart.
+     * If the quantity is set to 0, the item is removed entirely.
+     */
     public function updateQuantity(Request $request, $itemId)
     {
         $request->validate(['quantity' => 'required|integer|min:0']);
@@ -107,6 +125,10 @@ class CartController extends Controller
         return $this->fetchFormattedCart();
     }
 
+    /**
+     * Removes an item from the cart based on product ID or record ID.
+     * Includes a fallback check for record ID if matching by product_id yields no results.
+     */
     public function removeItem($id)
     {
         $cart = Auth::user()->cart()->first();

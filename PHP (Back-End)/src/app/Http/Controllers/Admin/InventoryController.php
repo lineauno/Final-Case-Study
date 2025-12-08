@@ -12,8 +12,9 @@ use Illuminate\Support\Facades\Storage;
 class InventoryController extends Controller
 {
     /**
-     * Get paginated products specifically for the Inventory Management page.
-     * @route GET /api/admin/inventory/products-paginated
+     * Retrieves paginated products filtered by an optional search query.
+     * Maps the collection to resolve local image storage URLs, sanitizes 
+     * null stock levels, and appends the category name for front-end display.
      */
     public function getPaginatedProducts(Request $request): JsonResponse
     {
@@ -50,8 +51,8 @@ class InventoryController extends Controller
     }
     
     /**
-     * Update the stock level of a product.
-     * @route PUT /api/admin/inventory/{product}/stock
+     * Updates the current stock count for a specific product record.
+     * Validates that the stock input is a non-negative integer before persisting.
      */
     public function updateStock(Request $request, Product $product): JsonResponse
     {
@@ -77,8 +78,8 @@ class InventoryController extends Controller
     }
 
     /**
-     * Update the price of a product.
-     * @route PUT /api/admin/inventory/{product}/price
+     * Updates the retail price of a specific product record.
+     * Ensures price values are numeric and at least zero before refreshing the model.
      */
     public function updatePrice(Request $request, Product $product): JsonResponse
     {
@@ -97,8 +98,8 @@ class InventoryController extends Controller
     }
 
     /**
-     * Get stock levels for low stock alerts.
-     * @route GET /api/admin/inventory/low-stock?low_stock=X
+     * Filters and retrieves a list of products falling below the provided threshold.
+     * Defaults to a threshold of 10 if the 'low_stock' parameter is not provided.
      */
     public function getStockLevels(Request $request): JsonResponse
     {
@@ -114,8 +115,8 @@ class InventoryController extends Controller
     }
 
     /**
-     * Monitor inventory: Get all products with stock info.
-     * @route GET /api/admin/inventory/all
+     * Fetches a snapshot of critical inventory fields for all products.
+     * Optimized to select only ID, Name, Stock, and Price for lightweight monitoring.
      */
     public function monitorInventory(): JsonResponse
     {

@@ -4,17 +4,27 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext'; 
 
 /**
- * OrderHistoryPage: Component responsible for fetching and displaying a user's 
- * past order history. It communicates with the backend API to retrieve a list of orders 
- * and renders them in a structured, readable format.
+ * OrderHistoryPage Component
+ * Responsible for fetching and displaying the authenticated user's past transactions.
+ * It interacts with the secure Orders API, manages asynchronous state transitions,
+ * and normalizes nested order data (including snapshotted purchase prices) for display.
  */
-
 function OrderHistoryPage() {
+    /**
+     * Component State Management
+     * - orders: Collection of historical order objects.
+     * - isLoading/error: Tracks operational status and server rejection feedback.
+     */
     const [orders, setOrders] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const { isAuthenticated } = useAuth();
 
+    /**
+     * Data Retrieval side-effect
+     * Executes upon component mount or whenever authentication state changes.
+     * Guards the API request to ensure data is only fetched for verified sessions.
+     */
     useEffect(() => {
         if (!isAuthenticated) return;
 
@@ -22,6 +32,11 @@ function OrderHistoryPage() {
             try {
                 const data = await api.getOrders(); 
                 
+                /**
+                 * Type Safety validation
+                 * Ensures the API response is iterable before committing to state,
+                 * preventing runtime mapping errors on empty or non-standard responses.
+                 */
                 if (Array.isArray(data)) {
                     setOrders(data);
                 } else {
@@ -49,13 +64,11 @@ function OrderHistoryPage() {
     }
 
     return (
-        // Apply main layout class
         <div className="order-history-page"> 
-            {/* Apply title class */}
             <h1 className="order-history-title">Your Order History</h1>
             
             {orders.length === 0 ? (
-                // Empty State Design - Keep some utility classes for basic structure
+                /* Empty state UI displayed when the user has no purchase history */
                 <div className="text-center p-12 border border-gray-200 rounded-lg shadow-sm bg-white max-w-lg mx-auto">
                     <p className="text-xl text-gray-600 mb-4">You haven't placed any orders yet.</p>
                     <Link to="/products" className="text-pink-600 hover:text-pink-800 font-semibold underline">
@@ -63,49 +76,35 @@ function OrderHistoryPage() {
                     </Link>
                 </div>
             ) : (
-                // Apply the order list container class
+                /* Order list container displaying individual transaction cards */
                 <div className="order-list"> 
                     {orders.map((order) => (
-                        // Apply the order card wrapper class
                         <div key={order.id} className="order-card-wrapper"> 
                             
-                            {/* TOP HEADER: Order ID, Date, Total, Status */}
-                            {/* Apply order-header class */}
+                            {/* Order summary header: identity, timestamp, totals, and fulfillment status */}
                             <div className="order-header">
-                                {/* Group for ID and Date */}
                                 <div className="header-group">
                                     <p className="order-id">
-                                        {/* Apply order-id-label class */}
                                         <span className="order-id-label">Order #</span>{order.id}
                                     </p>
-                                    {/* Apply order-date class */}
                                     <p className="order-date">Placed on: {new Date(order.created_at).toLocaleDateString()}</p>
                                 </div>
 
-                                {/* Group for Total and Status */}
                                 <div className="header-group items-end">
-                                    {/* Apply order-total-section and order-total-amount classes */}
                                     <div className="order-total-section">
                                         <p className="order-total-amount">₱{order.order_total}</p>
                                     </div>
-                                    
-                                    {/* Apply status-badge and specific status classes */}
                                 </div>
                             </div>
                             
-                            {/* DETAILS SECTION */}
-                            {/* Apply order-details-section class */}
+                            {/* Breakdown of items contained within this specific order */}
                             <div className="order-details-section"> 
-                                {/* Apply detail-section-title class */}
                                 <p className="detail-section-title">Items Ordered</p>
                                 
-                                {/* Apply item-list-container class */}
                                 <ul className="item-list-container">
                                     {order.items.map(item => (
-                                        // Apply detail-list-item class
                                         <li key={item.id} className="detail-list-item"> 
                                             <div>
-                                                {/* Apply item-name class */}
                                                 <span className="item-name">{item.product?.name || "Product Deleted"}</span> x {item.quantity} 
                                                 <span className="text-sm text-gray-500 ml-2">(@ ₱{item.price_at_purchase})</span>
                                             </div>
@@ -117,8 +116,7 @@ function OrderHistoryPage() {
                                 </ul>
                             </div>
 
-                            {/* SHIPPING SECTION */}
-                            {/* Apply shipping-info-box class */}
+                            {/* Captured shipping destination details specific to this order snapshot */}
                             <div className="shipping-info-box"> 
                                 <p className="detail-section-title">Shipping Address</p>
                                 <p className="text-base font-medium text-gray-800">{order.shipping_address}</p>

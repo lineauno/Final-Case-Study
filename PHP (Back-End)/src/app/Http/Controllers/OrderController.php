@@ -12,6 +12,14 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class OrderController extends Controller
 {
+    /**
+     * Executes the checkout process using a database transaction.
+     * Validates stock availability for each item, decrements product inventory,
+     * generates an order record with snapshots of product prices, and clears 
+     * the user's cart upon success.
+     * * @param Request $request Contains shipping_address and total amount.
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function processCheckout(Request $request)
     {
         $request->validate([
@@ -83,6 +91,11 @@ class OrderController extends Controller
         }
     }
     
+    /**
+     * Retrieves the order history for the currently authenticated user.
+     * Eager loads order items and product details, returning results sorted
+     * by the most recent creation date.
+     */
     public function index()
     {
         $user = Auth::user();

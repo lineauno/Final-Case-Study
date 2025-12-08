@@ -1,7 +1,18 @@
 import React from 'react';
-import '../../pagesstyles/SuccessModal.css';//import css.
+import '../../pagesstyles/SuccessModal.css';
 
+/**
+ * SuccessModal Component
+ * * A reusable feedback modal designed to acknowledge successful user operations.
+ * It renders a themed overlay with a personalized message and a celebration 
+ * visual, ensuring the user is informed of positive transaction outcomes.
+ */
 const SuccessModal = ({ show, message, onClose }) => {
+    
+    /**
+     * Conditional Rendering Handler
+     * Prevents the component from occupying DOM space when the 'show' prop is false.
+     */
     if (!show) return null;
 
     return (

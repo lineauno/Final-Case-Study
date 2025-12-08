@@ -1,7 +1,19 @@
 import React from 'react';
-import '../../pagesstyles/DeleteConfirmationModal.css'; // Importing the CSS we just made.
+import '../../pagesstyles/DeleteConfirmationModal.css';
 
+/**
+ * DeleteConfirmationModal Component
+ * * A reusable UI modal used to safeguard destructive actions. 
+ * It forces a user confirmation before executing a deletion, displaying 
+ * the specific name of the item to be removed.
+ */
 const DeleteConfirmationModal = ({ show, onConfirm, onCancel, itemName }) => {
+    
+    /**
+     * Conditional Rendering
+     * If the 'show' prop is false, the component returns null to 
+     * keep the modal hidden from the DOM.
+     */
     if (!show) {
         return null;
     }

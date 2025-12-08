@@ -1,3 +1,10 @@
+/**
+ * Modal Global Overlay
+ * Utilizes fixed positioning to cover the entire viewport. 
+ * background-color: Semitransparent black to provide contrast against the background.
+ * z-index: High value to ensure the modal sits on top of all other page elements.
+ * backdrop-filter: Applies a subtle blur effect to background elements.
+ */
 .modal-backdrop {
     position: fixed;
     top: 0;
@@ -12,6 +19,11 @@
     backdrop-filter: blur(2px);
 }
 
+/**
+ * Success Theme Modal Container
+ * features a distinct green outer glow (box-shadow) to represent positive feedback.
+ * animation: Custom 'bounceIn' keyframe using cubic-bezier for a springy entrance effect.
+ */
 .modal-content.success-theme {
     background-color: white;
     border-radius: 20px;
@@ -19,7 +31,7 @@
     width: 90%;
     max-width: 350px;
     text-align: center;
-    box-shadow: 0 15px 40px rgba(46, 204, 113, 0.3); /* Green shadow glow */
+    box-shadow: 0 15px 40px rgba(46, 204, 113, 0.3);
     animation: bounceIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -28,6 +40,11 @@
     100% { transform: scale(1); opacity: 1; }
 }
 
+/**
+ * Celebration Icon Container
+ * Circular background holding a decorative emoji or icon.
+ * Color: Thematic success green matched with a soft off-white background.
+ */
 .success-icon-container {
     font-size: 3rem;
     margin-bottom: 10px;
@@ -37,7 +54,7 @@
     line-height: 80px;
     border-radius: 50%;
     margin: 0 auto 15px auto;
-    color: #2ecc71; /* Success Green. */
+    color: #2ecc71;
 }
 
 .modal-header.success-text {
@@ -52,6 +69,11 @@
     margin-bottom: 20px;
 }
 
+/**
+ * Success Action Button
+ * Applies a vibrant gradient background and rounded borders to prompt dismissal.
+ * Hover states include a subtle lift and increased drop shadow.
+ */
 .success-button {
     background: linear-gradient(135deg, #2ecc71, #27ae60);
     color: white;

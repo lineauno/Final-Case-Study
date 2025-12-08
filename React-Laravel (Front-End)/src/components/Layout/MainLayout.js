@@ -6,12 +6,23 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useProduct } from '../../contexts/ProductContext';
 import { useCart } from '../../contexts/CartContext';
 
-// MainLayout component defines the common structure (header, main content area, footer) for non-admin pages
+/**
+ * MainLayout Component
+ * Defines the master structural wrapper for all customer-facing routes.
+ * It coordinates the loading states of primary data contexts (Auth, Product, and Cart)
+ * and provides a consistent layout containing the Header, Main Content area (Outlet), 
+ * and Footer.
+ */
 function MainLayout() {
     const { isLoading: authLoading } = useAuth();
     const { isLoading: productLoading } = useProduct();
     const { isLoading: cartLoading } = useCart();
     
+    /**
+     * App-wide Loading Logic
+     * Aggregates various asynchronous state flags. If any core context 
+     * is still initializing, a blocking loading screen is rendered.
+     */
     const isAppLoading = authLoading || productLoading || cartLoading;
 
     if (isAppLoading) {
@@ -20,16 +31,12 @@ function MainLayout() {
 
     return (
         <div className="app-main-container">
-            {/* The site-wide header component */}
             <Header /> 
             
-            {/* Main content wrapper */}
             <main className="main-content">
-                {/* Outlet renders the specific component corresponding to the current route */}
                 <Outlet /> 
             </main>
 
-            {/* The site-wide footer component */}
             <Footer />
         </div>
     );

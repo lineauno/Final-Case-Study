@@ -10,6 +10,11 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    /**
+     * Registers a new user and generates an authentication token.
+     * * Validates account uniqueness and password confirmation before persisting 
+     * the user with a hashed password. Returns user details and a Bearer token.
+     */
     public function register(Request $request)
     {
         $request->validate([
@@ -32,6 +37,12 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * Authenticates a user and establishes a session.
+     * * Verifies credentials and checks if the user is currently banned. 
+     * Upon success, deletes old tokens to ensure a fresh session, identifies 
+     * the user role, and returns user metadata with an access token.
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -72,6 +83,11 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Invalidates the user's current access token.
+     * * Revokes the token provided in the request header to log the user out
+     * from the current device session.
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

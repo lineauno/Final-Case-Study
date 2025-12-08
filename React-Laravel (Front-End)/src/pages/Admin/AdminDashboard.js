@@ -3,13 +3,27 @@ import { Link } from 'react-router-dom';
 import { getDashboardData } from '../../services/api'; 
 import '../../pagesstyles/AdminDashboard.css';
 
-// AdminDashboard component displays key metrics and recent activities for administrators
+/**
+ * AdminDashboard Component
+ * Renders the central overview page for administrators.
+ * This component fetches operational statistics (metrics) and recent user data,
+ * providing interactive links to specific management modules.
+ */
 function AdminDashboard() {
+    /**
+     * Component state definitions.
+     * Manages statistical metrics, activity arrays, and network status flags.
+     */
     const [metrics, setMetrics] = useState(null);
     const [activity, setActivity] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    /**
+     * Data Initialization Hook
+     * Dispatches an API request on mount to populate the dashboard metrics
+     * and activity feeds.
+     */
     useEffect(() => {
         const loadDashboardData = async () => {
             try {
@@ -29,6 +43,11 @@ function AdminDashboard() {
         loadDashboardData();
     }, []); 
 
+    /**
+     * Metrics Configuration Mapping
+     * Transforms raw state data into a structured array for UI rendering.
+     * Maps icons, titles, and localized values to their respective navigation paths.
+     */
     const dashboardMetrics = metrics ? [
         { 
             title: "Total Products", 
@@ -56,6 +75,10 @@ function AdminDashboard() {
         },
     ] : [];
 
+    /**
+     * Status-based early returns
+     * Renders standard loading and error states to maintain a smooth user experience.
+     */
     if (isLoading) {
         return <div className="loading-style">Loading Dashboard...</div>;
     }
@@ -70,7 +93,7 @@ function AdminDashboard() {
             <h2 className="welcome-heading">Welcome back, Admin!</h2>
             <p className="overview-text">Quick overview of Crafty Corner operations.</p>
             
-            {/* Grid container for displaying key metrics */}
+            {/* Grid display for the processed dashboard statistics cards */}
             <div className="metrics-grid">
                 {dashboardMetrics.map((metric, index) => (
                     <Link 
@@ -85,7 +108,7 @@ function AdminDashboard() {
                 ))}
             </div>
 
-            {/* Section dedicated to displaying recent user activity */}
+            {/* List display for chronologically ordered user registrations */}
             <section className="admin-recent-activity">
                 <h3>Recent Activity ({activity.length} Users)</h3>
                 <div className="activity-list">

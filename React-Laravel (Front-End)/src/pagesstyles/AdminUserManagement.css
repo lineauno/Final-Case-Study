@@ -1,3 +1,8 @@
+/**
+ * Admin Page Layout
+ * Provides a responsive content wrapper with central alignment,
+ * standardized spacing, and professional typography for administration modules.
+ */
 .admin-page-container {
     padding: 30px 25px;
     max-width: 1200px;
@@ -12,7 +17,11 @@
     margin-bottom: 25px;
 }
 
-/* --- Table Card Styling --- */
+/**
+ * User Table Card
+ * Wraps the data table in a clean, shadowed white container
+ * with overflow handling to support mobile visibility.
+ */
 .admin-card.user-table-card {
     background-color: white;
     border-radius: 12px;
@@ -21,7 +30,11 @@
     overflow-x: auto;
 }
 
-/* --- Table Structure & Typography --- */
+/**
+ * User Table Typography & Borders
+ * Ensures high readability via uppercase headers, consistent row padding,
+ * and horizontal lines to differentiate user records.
+ */
 .user-table {
     width: 100%;
     border-collapse: collapse;
@@ -52,7 +65,11 @@
     background-color: #fcfcfc; 
 }
 
-/* --- Role Badges --- */
+/**
+ * Role-Based Badges
+ * Semantic styling for account types. Admin users are flagged in theme pink,
+ * while standard customers receive a contrasting blue treatment.
+ */
 .role-badge {
     padding: 4px 10px;
     border-radius: 20px;
@@ -64,17 +81,21 @@
 
 .role-badge.admin {
     background-color: #ffc1e3;
-    color: #d63384; /* Theme Pink */
+    color: #d63384; 
 }
 
 .role-badge.customer {
     background-color: #e6f7ff;
-    color: #1890ff; /* Blue */
+    color: #1890ff; 
 }
 
-/* --- Action Button --- */
+/**
+ * Destructive Action Button
+ * High-contrast red/pink styling for user deletion, featuring hover
+ * transitions and disabled-state handling.
+ */
 .delete-user-btn {
-    background: #ff6f91; /* Pink Red */
+    background: #ff6f91;
     color: white;
     border: none;
     padding: 8px 12px;
@@ -89,7 +110,11 @@
     background: #e74c3c;
 }
 
-/* --- Pagination Controls --- */
+/**
+ * Navigation Pagination
+ * Centered flexbox controls for browsing the user directory.
+ * Includes visual feedback for active and disabled navigation states.
+ */
 .pagination-controls {
     margin-top: 20px;
     display: flex;
@@ -118,7 +143,10 @@
     cursor: not-allowed;
 }
 
-/* --- Loading State --- */
+/**
+ * Status and Fallback Displays
+ * Defines centered styles for the loading state and missing data messages.
+ */
 .admin-loading {
     text-align: center;
     padding: 40px;

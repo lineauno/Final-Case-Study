@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Schema;
 class UserController extends Controller
 {
     /**
-     * @route GET /api/admin/users
+     * Retrieves a paginated list of users with search and sort capabilities.
+     * Supports filtering by name/email and dynamic sorting. Returns restricted
+     * attributes to ensure security while listing.
      */
     public function index(Request $request)
     {
@@ -47,11 +49,12 @@ class UserController extends Controller
     }
 
     /**
-     * @route PUT /api/admin/users/{user}
+     * Updates an existing user's profile details and administrative permissions.
+     * Performs conditional validation to ensure email uniqueness (ignoring current ID)
+     * and refreshes the model to display updated secure fields.
      */
     public function update(Request $request, User $user)
     {
-        // 1. Validate the incoming request data
         $request->validate([
             'name' => 'sometimes|string|max:255',
             'email' => [
@@ -76,7 +79,9 @@ class UserController extends Controller
     }
 
     /**
-     * @route POST /api/admin/users/{user}/ban
+     * Toggles the ban status of a specific user.
+     * Flips the boolean state of 'is_banned', persists the change, and returns 
+     * the updated user object with relevant status messaging.
      */
     public function toggleBan(User $user)
     {
@@ -99,7 +104,9 @@ class UserController extends Controller
     }
     
     /**
-     * @route DELETE /api/admin/users/{user}
+     * Permanently deletes a user record from the system.
+     * Utilizes Route Model Binding for record identification and returns a 204
+     * No Content response upon successful deletion.
      */
     public function destroy(User $user)
     {

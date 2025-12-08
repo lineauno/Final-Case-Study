@@ -19,15 +19,36 @@ const HeartIcon = ({ isWished, size = 20, className = "" }) => (
     </svg>
 );
 
+/**
+ * WishlistToggle Component
+ * Provides a button interface to add or remove a specific product from 
+ * the user's wishlist. Monitors authentication state via AuthContext 
+ * to restrict management to logged-in users.
+ */
 function WishlistToggle({ productId, initialIsWished = false }) {
     const { isAuthenticated } = useAuth();
+    
+    /**
+     * Component State
+     * - isWished: Tracks the current local wishlist status.
+     * - isProcessing: Prevents rapid duplicate API calls while a request is pending.
+     */
     const [isWished, setIsWished] = useState(initialIsWished);
     const [isProcessing, setIsProcessing] = useState(false);
 
+    /**
+     * Synchronizes local state with parent props if initialIsWished updates 
+     * (e.g., after initial data fetch).
+     */
     useEffect(() => {
         setIsWished(initialIsWished);
     }, [initialIsWished]);
 
+    /**
+     * handleToggle
+     * Dispatches POST or DELETE requests to the API based on the toggle state.
+     * Includes authentication validation and optimistic UI state management.
+     */
     const handleToggle = async (e) => {
         e.stopPropagation(); 
         e.preventDefault(); 

@@ -3,12 +3,22 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { logout } from '../../services/api'; 
 
-// AdminLayout component defines the structural layout (header, navigation, content area) for the admin section
+/**
+ * AdminLayout Component
+ * Defines the master structural wrapper for the administrative section.
+ * Includes a persistent navigation header, a dynamic content area using 
+ * React Router's Outlet, and a footer displaying session info.
+ */
 function AdminLayout() {
     const { user } = useAuth(); 
     const navigate = useNavigate();
     const location = useLocation();
 
+    /**
+     * Session Termination Handler
+     * Dispatches a request to the backend logout service, clears local 
+     * authentication tokens, and redirects the user to the login route.
+     */
     const handleLogout = async (e) => {
         e.preventDefault();
         try {
@@ -22,6 +32,10 @@ function AdminLayout() {
         }
     };
     
+    /**
+     * Navigation Configuration
+     * Defines the primary administrative links available in the header.
+     */
     const navItems = [
         { name: "Dashboard", path: "/admin/dashboard" },
         { name: "Products", path: "/admin/products" },
@@ -31,22 +45,17 @@ function AdminLayout() {
     return (
         <div className="admin-app">
             
-            {/* Header section containing the brand and main navigation */}
             <header className="admin-header admin-navbar-container pink-banner-bg"> 
                 
-                {/* Application title/brand for the admin interface */}
                 <h1 className="brand admin-brand">
                     Crafty Corner - Admin
                 </h1>
 
-                {/* Navigation bar for administrative links */}
                 <nav className="admin-nav">
-                    {/* Map through the defined navigation items to create Link components */}
                     {navItems.map((item) => (
                         <Link
                             key={item.path} 
                             to={item.path} 
-                            // Dynamically set the 'active' class if the current path starts with the item's path
                             className={`nav-link nav-button ${
                                 location.pathname.startsWith(item.path) ? "active" : ""
                             }`}
@@ -55,10 +64,8 @@ function AdminLayout() {
                         </Link>
                     ))}
 
-                    {/* Logout button which performs an action rather than simple navigation */}
                     <button 
                         onClick={handleLogout} 
-                        // Apply classes for link styling, button appearance, and specific logout colors
                         className="nav-link nav-button logout-styled"
                     >
                         Logout
@@ -66,15 +73,11 @@ function AdminLayout() {
                 </nav>
             </header>
             
-            {/* Main content area where nested route components will be rendered */}
             <main className="admin-content-wrapper">
-                {/* Outlet renders the matched child route component (e.g., Dashboard, ProductList) */}
                 <Outlet /> 
             </main>
             
-            {/* Footer section for administrative context information */}
             <footer className="admin-footer">
-                {/* Display the logged-in user's email for verification */}
                 <p> Logged in as: {user ? user.email : 'Loading...'} | Role: Admin</p>
             </footer>
         </div>

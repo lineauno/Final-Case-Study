@@ -6,7 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-        public function up(): void
+    /**
+     * Creates the schema for the 'products' database table.
+     * * Establishes columns for identity, financial data (price), and inventory levels.
+     * Configures a nullable foreign key relationship to the 'categories' table with 
+     * a cascade rule that sets the category ID to null if the parent is deleted.
+     */
+    public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
@@ -18,9 +24,8 @@ return new class extends Migration
             $table->text('image_url')->nullable();
             $table->boolean('is_featured')->default(false);
             
-            // 💡 FIX: Added ->nullable() here
             $table->foreignId('category_id')
-                ->nullable() // <--- THIS IS THE KEY FIX
+                ->nullable()
                 ->constrained('categories')
                 ->onDelete('set null'); 
             
@@ -28,6 +33,10 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Removes the 'products' table from the database schema.
+     * * Used for reversing the migration during development or testing rollbacks.
+     */
     public function down(): void
     {
         Schema::dropIfExists('products');

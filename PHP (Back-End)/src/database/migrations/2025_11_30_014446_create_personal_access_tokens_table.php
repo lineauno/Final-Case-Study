@@ -7,7 +7,11 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Creates the 'personal_access_tokens' table schema.
+     * * This table is required by Laravel Sanctum to store API tokens. It uses 
+     * polymorphic relationships ('tokenable') to associate tokens with users 
+     * or other entities, tracks specific token abilities (permissions), 
+     * and monitors token usage and expiration.
      */
     public function up(): void
     {
@@ -24,7 +28,9 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Drops the 'personal_access_tokens' table.
+     * * This action will invalidate all currently active API sessions generated 
+     * via Sanctum upon execution.
      */
     public function down(): void
     {

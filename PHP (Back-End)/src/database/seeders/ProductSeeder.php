@@ -8,6 +8,14 @@ use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
 {
+    /**
+     * Executes the product inventory seeding process.
+     * * Ensures a default 'General Art Supplies' category exists to prevent foreign 
+     * key constraint violations. It then iterates through a predefined list of 
+     * art products, utilizing 'updateOrCreate' to populate the database with 
+     * initial stock, pricing, and visual asset references while preventing 
+     * duplicate records based on the product name.
+     */
     public function run(): void
     {
         $category = Category::firstOrCreate(

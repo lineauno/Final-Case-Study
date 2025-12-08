@@ -23,78 +23,96 @@ import WishlistPage from './pages/User/WishlistPage';
 import NotFoundPage from './pages/Common/NotFoundPage'; 
 import AdminInventoryPage from './pages/Admin/AdminInventoryPage'; 
 
+/**
+ * ProtectedRoute Component
+ * * A Higher-Order Component (HOC) used to guard sensitive user routes. 
+ * Checks AuthContext state; redirects unauthenticated users to /login 
+ * and handles app-wide loading states to prevent flicker during 
+ * token verification.
+ */
 const ProtectedRoute = ({ element: Element }) => {
-	const { isAuthenticated, isLoading } = useAuth();
-	
-	if (isLoading) return <div>Loading Application...</div>; 
-	
-	if (!isAuthenticated) {
-		return <Navigate to="/login" replace />; 
-	}
-	
-	return Element;
+    const { isAuthenticated, isLoading } = useAuth();
+    
+    if (isLoading) return <div>Loading Application...</div>; 
+    
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />; 
+    }
+    
+    return Element;
 };
 
+/**
+ * AdminRoute Component
+ * * A specialized route guard for the administrative tier.
+ * Verifies that the authenticated user possesses the 'Admin' role.
+ * Redirects non-admin users to the customer home page to maintain 
+ * unauthorized access boundaries.
+ */
 const AdminRoute = ({ children }) => {
-	const { isAuthenticated, user, isLoading } = useAuth();
-	
-	if (isLoading) return <div className="loading-style">Loading Admin Access...</div>; 
-	
-	const isAdmin = isAuthenticated && user && user.role === 'Admin';
+    const { isAuthenticated, user, isLoading } = useAuth();
+    
+    if (isLoading) return <div className="loading-style">Loading Admin Access...</div>; 
+    
+    const isAdmin = isAuthenticated && user && user.role === 'Admin';
 
-	if (!isAdmin) {
-		return <Navigate to="/" replace />; 
-	}
-	
-	return children;
+    if (!isAdmin) {
+        return <Navigate to="/" replace />; 
+    }
+    
+    return children;
 };
 
-
+/**
+ * Main Application Component
+ * * Defines the high-level routing structure using React Router v6.
+ * Orchestrates nested routing for 'MainLayout' (Customer) and 
+ * 'AdminLayout' (Internal), and maps public vs. guarded endpoints.
+ */
 function App() {
-	return (
-		<Routes>
-			
-			<Route path="/" element={<MainLayout />}> 
-				
-				<Route index element={<HomePage />} />
-				<Route path="products" element={<ProductListingPage />} />
-				<Route path="products/:id" element={<ProductDetailsPage />} />
-				<Route path="cart" element={<CartPage />} />
-				
-				<Route path="checkout" element={<ProtectedRoute element={<CheckoutPage />} />} /> 
-				<Route path="orders" element={<ProtectedRoute element={<OrderHistoryPage />} />} />
-				<Route path="profile" element={<ProtectedRoute element={<ProfilePage />} />} /> 
-				<Route path="wishlist" element={<ProtectedRoute element={<WishlistPage />} />} />
-			</Route>
+    return (
+        <Routes>
+            
+            {/* Customer-Facing Route Group: Uses MainLayout wrapper */}
+            <Route path="/" element={<MainLayout />}> 
+                <Route index element={<HomePage />} />
+                <Route path="products" element={<ProductListingPage />} />
+                <Route path="products/:id" element={<ProductDetailsPage />} />
+                <Route path="cart" element={<CartPage />} />
+                
+                {/* Guards for Customer Transactions/Account pages */}
+                <Route path="checkout" element={<ProtectedRoute element={<CheckoutPage />} />} /> 
+                <Route path="orders" element={<ProtectedRoute element={<OrderHistoryPage />} />} />
+                <Route path="profile" element={<ProtectedRoute element={<ProfilePage />} />} /> 
+                <Route path="wishlist" element={<ProtectedRoute element={<WishlistPage />} />} />
+            </Route>
 
-			<Route path="/login" element={<LoginPage />} /> 
-			<Route path="/register" element={<RegisterPage />} /> 
+            {/* Authentication Routes: Independent of main page layout */}
+            <Route path="/login" element={<LoginPage />} /> 
+            <Route path="/register" element={<RegisterPage />} /> 
 
+            {/* Administrative Route Group: Strictly guarded with AdminRoute HOC */}
+            <Route 
+                path="/admin" 
+                element={
+                    <AdminRoute>
+                        <AdminLayout /> 
+                    </AdminRoute>
+                }
+            > 
+                <Route index element={<AdminDashboard />} /> 
+                <Route path="dashboard" element={<AdminDashboard />} /> 
+                <Route path="products" element={<AdminProductManagement />} /> 
+                <Route path="categories" element={<AdminCategoryManagement />} />
+                <Route path="users" element={<AdminUserManagement />} /> 
+                <Route path="inventory" element={<AdminInventoryPage />} /> 
+            </Route>
 
-			<Route 
-				path="/admin" 
-				element={
-					<AdminRoute>
-						<AdminLayout /> 
-					</AdminRoute>
-				}
-			> 
-				<Route index element={<AdminDashboard />} /> 
-				<Route path="dashboard" element={<AdminDashboard />} /> 
-				
-				<Route path="products" element={<AdminProductManagement />} /> 
-				<Route path="categories" element={<AdminCategoryManagement />} />
-				
-				<Route path="users" element={<AdminUserManagement />} /> 
+            {/* Fallback Catch-all: NotFound 404 handler */}
+            <Route path="*" element={<NotFoundPage />} /> 
 
-				<Route path="inventory" element={<AdminInventoryPage />} /> 
-				
-			</Route>
-
-			<Route path="*" element={<NotFoundPage />} /> 
-
-		</Routes>
-	);
+        </Routes>
+    );
 }
 
 export default App;

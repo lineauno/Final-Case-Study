@@ -5,9 +5,14 @@ import CartItem from '../../components/Cart/CartItem';
 import DeleteConfirmationModal from '../../components/Layout/DeleteConfirmationModal';
 import SuccessModal from '../../components/Layout/SuccessModal';
 
-// 💡 Define Backend URL for Smart Image Logic
 const BACKEND_BASE_URL = 'http://localhost:8082';
 
+/**
+ * CartPage Component
+ * Renders the main shopping cart interface for authenticated users. 
+ * Coordinates cart state from context, performs image URL correction, 
+ * and manages confirmation modals for item removal.
+ */
 function CartPage() {
     const { cart, cartCount, isLoading, cartTotal, handleRemoveFromCart } = useCart(); 
     
@@ -15,13 +20,17 @@ function CartPage() {
     const [successModal, setSuccessModal] = useState({ show: false, message: '' });
     const [isProcessing, setIsProcessing] = useState(false);
 
-    // --- HELPER FUNCTION: Smart Image Logic for a single item ---
+    /**
+     * Smart Image Normalization
+     * Resolves product image paths by determining if they are external links 
+     * or relative storage paths. Appends the backend base URL to local paths 
+     * and provides a standard fallback for missing assets.
+     */
     const getCorrectedImageUrl = (rawUrl) => {
         if (!rawUrl) {
             return `${BACKEND_BASE_URL}/assets/images/default.png`;
         }
         
-        // If the URL doesn't start with 'http', assume it's a local/storage path that needs the base URL.
         if (!rawUrl.startsWith('http')) {
             const correctedPath = rawUrl.startsWith('/') ? rawUrl : `/${rawUrl}`;
             return `${BACKEND_BASE_URL}${correctedPath}`;
@@ -30,8 +39,12 @@ function CartPage() {
         return rawUrl;
     };
 
-    // --- Main Logic ---
-
+    /**
+     * Item Removal Orchestration
+     * initiateDelete: Captures item metadata to trigger the confirmation modal.
+     * confirmDelete: Executes the context-level removal logic, handles 
+     * processing states, and displays feedback upon success.
+     */
     const initiateDelete = (item) => {
         const targetId = item.product_id || item.id;
         
@@ -66,12 +79,15 @@ function CartPage() {
         setSuccessModal({ show: false, message: '' });
     };
 
-    // --- Map Cart Items and Apply Smart Image Feature ---
+    /**
+     * Optimistic State Processing
+     * Maps the current cart data to an array where product images are 
+     * fully resolved and normalized before being passed to child components.
+     */
     const processedCart = cart.map(item => ({
         ...item,
         product: {
             ...item.product,
-            // 💡 Apply the smart logic to fix the image URL before rendering the CartItem
             image_url: getCorrectedImageUrl(item.product.image_url)
         }
     }));
@@ -115,7 +131,6 @@ function CartPage() {
             <h1 className="cart-title-brand">Your Shopping Cart ({cartCount} Items)</h1>
             
             <div className="cart-items-box">
-                {/* 💡 Use the processedCart array */}
                 {processedCart.map(item => (
                     <CartItem 
                         key={item.product_id} 

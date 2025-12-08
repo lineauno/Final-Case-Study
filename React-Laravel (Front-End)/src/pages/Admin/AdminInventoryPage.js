@@ -6,6 +6,12 @@ import '../../pagesstyles/AdminInventoryPage.css';
 
 const ITEMS_PER_PAGE = 10; 
 
+/**
+ * AdminInventoryPage Component
+ * Provides a high-density administrative table for monitoring and updating 
+ * real-time stock levels across the catalog. It features paginated data 
+ * retrieval, inline stock editing, and semantic color-coding for stock status.
+ */
 function AdminInventoryPage() {
     const [products, setProducts] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -19,6 +25,12 @@ function AdminInventoryPage() {
     const [newStock, setNewStock] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     
+    /**
+     * Stock Status Helpers
+     * isOutOfStock: Identifies if a product has zero units available.
+     * getStockStatusClass: Returns a CSS class mapping for visual color alerts 
+     * based on stock threshold (Low, Sufficient, Out).
+     */
     const isOutOfStock = (stock) => stock <= 0;
     const getStockStatusClass = (stock) => {
         if (stock <= 0) return 'stock-out';
@@ -26,6 +38,11 @@ function AdminInventoryPage() {
         return 'stock-sufficient';
     };
 
+    /**
+     * Data Retrieval Callback
+     * Fetches a paginated slice of the product inventory from the backend.
+     * Synchronizes local state with backend paginator response.
+     */
     const fetchInventory = useCallback(async (page = 1) => {
         setIsLoading(true);
         setError(null);
@@ -44,6 +61,10 @@ function AdminInventoryPage() {
         }
     }, []);
 
+    /**
+     * Component Lifecycle Hook
+     * Triggers inventory retrieval whenever the current page index changes.
+     */
     useEffect(() => {
         fetchInventory(currentPage);
     }, [currentPage, fetchInventory]);
@@ -54,6 +75,11 @@ function AdminInventoryPage() {
         }
     };
     
+    /**
+     * Edit Mode Handlers
+     * handleEditClick: Transitions a table row into an input-active state.
+     * handleCancelStock: Reverts changes and exits the row edit mode.
+     */
     const handleEditClick = (product) => {
         setEditingId(product.id);
         setNewStock(String(product.stock));
@@ -64,6 +90,12 @@ function AdminInventoryPage() {
         setNewStock('');
     };
 
+    /**
+     * Update Submission Logic
+     * Dispatches the new stock value to the API. Upon successful 
+     * confirmation, it refreshes the catalog view and displays a 
+     * success notification.
+     */
     const handleSaveStock = async (productId) => {
         const stockValue = parseInt(newStock);
 
@@ -114,7 +146,6 @@ function AdminInventoryPage() {
                             <table className="inventory-table">
                                 <thead>
                                     <tr>
-                                        {/* Adjusted headers to align with rendering logic */}
                                         <th>Product</th>
                                         <th>Category</th>
                                         <th>Price</th>
@@ -128,13 +159,11 @@ function AdminInventoryPage() {
                                             key={product.id} 
                                             className={`inventory-row ${isOutOfStock(product.stock) ? 'out-of-stock-row' : ''}`}
                                         >
-                                            {}
                                             <td className="text-bold">{product.name}</td>
                                             
                                             <td>{product.category_name || 'N/A'}</td> 
                                             <td>₱{product.price}</td>
                                             
-                                            {/* STOCK EDITING CELL */}
                                             <td className="text-center">
                                                 {editingId === product.id ? (
                                                     <input
@@ -151,7 +180,6 @@ function AdminInventoryPage() {
                                                 )}
                                             </td>
                                             
-                                            {/* ACTION BUTTONS */}
                                             <td className="action-button-group">
                                                 {editingId === product.id ? (
                                                     <>
@@ -188,7 +216,6 @@ function AdminInventoryPage() {
                             !isLoading && <p className="no-inventory-message">No inventory items found.</p>
                         )}
 
-                        {/* Pagination Controls */}
                         {totalPages > 1 && (
                             <div className="pagination-controls">
                                 <button 

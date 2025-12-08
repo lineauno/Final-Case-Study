@@ -1,3 +1,8 @@
+/**
+ * Admin Page Container
+ * Provides a responsive content wrapper with central alignment 
+ * and standard typography for administrative modules.
+ */
 .admin-page-container {
     padding: 30px 25px;
     max-width: 1200px;
@@ -17,7 +22,11 @@
     margin-bottom: 30px;
 }
 
-/* --- Table Card Styling --- */
+/**
+ * Inventory Table Card Styling
+ * Encapsulates the table in a white card with a subtle shadow 
+ * and overflow protection for small screen viewing.
+ */
 .admin-card.inventory-table-card {
     background-color: white;
     border-radius: 12px;
@@ -26,7 +35,11 @@
     overflow-x: auto;
 }
 
-/* --- Table Structure --- */
+/**
+ * Inventory Table Structure
+ * Defines the presentation for data rows, ensuring high legibility 
+ * via border-collapsing and uppercase header styling.
+ */
 .inventory-table {
     width: 100%;
     border-collapse: collapse;
@@ -62,11 +75,15 @@
     font-weight: 600;
 }
 
-/* --- Stock Status & Input --- */
+/**
+ * Stock Status & Inline Input
+ * stock-input: The interactive field for rapid stock updates.
+ * status flags: Dynamic color codes indicating High, Low, or Out-of-Stock levels.
+ */
 .stock-input {
     width: 80px;
     padding: 5px;
-    border: 1px solid #d63384; /* Pink border */
+    border: 1px solid #d63384; 
     border-radius: 4px;
 }
 
@@ -76,12 +93,16 @@
     display: inline-block;
 }
 
-.status-high { color: #2ecc71; } /* Green */
-.status-low { color: #f39c12; }  /* Yellow/Orange */
-.status-out { color: #e74c3c; }  /* Red */
+.status-high { color: #2ecc71; } 
+.status-low { color: #f39c12; }  
+.status-out { color: #e74c3c; }  
 
 
-/* --- Action Buttons & Controls --- */
+/**
+ * Action Buttons & Control UI
+ * Provides distinct visual language for editing (Blue), 
+ * saving (Green), and cancelling (Red) administrative updates.
+ */
 .action-button-group {
     display: flex;
     gap: 8px;
@@ -97,7 +118,7 @@
 }
 
 .btn-save-stock {
-    background: #2ecc71; /* Green */
+    background: #2ecc71; 
     color: white;
     padding: 6px 12px;
     border: none;
@@ -106,7 +127,7 @@
 }
 
 .btn-cancel-stock {
-    background: #e74c3c; /* Red */
+    background: #e74c3c; 
     color: white;
     padding: 6px 12px;
     border: none;
@@ -114,6 +135,11 @@
     cursor: pointer;
 }
 
+/**
+ * Pagination Controls
+ * A horizontally centered layout for catalog navigation, 
+ * utilizing Flexbox for perfect alignment.
+ */
 .pagination-controls {
     margin-top: 20px;
     display: flex;

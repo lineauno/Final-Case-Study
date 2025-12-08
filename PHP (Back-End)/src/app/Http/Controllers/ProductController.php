@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    /**
+     * Normalizes the product image URL for the front-end.
+     * Determines if the path is an external link, a static asset, or a 
+     * file in local storage requiring a generated public URL.
+     */
     private function processProductImage($product)
     {
         if ($product->image_url) {
@@ -23,6 +28,11 @@ class ProductController extends Controller
         return $product;
     }
 
+    /**
+     * Retrieves a list of products with optional search filtering.
+     * Searches against product names and descriptions. If a user is 
+     * authenticated, it checks their wishlist to mark products accordingly.
+     */
     public function index(Request $request)
     {
         $query = Product::with('category');
@@ -55,6 +65,11 @@ class ProductController extends Controller
         return response()->json($products);
     }
     
+    /**
+     * Fetches products flagged as 'featured' for display on the landing page.
+     * Limits the result set to 6 items and processes images and user 
+     * wishlist status similar to the index method.
+     */
     public function featured()
     {
         $products = Product::with('category')->where('is_featured', true)->take(6)->get();
@@ -77,6 +92,11 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
+    /**
+     * Provides detailed information for a single product record.
+     * Returns a 404 response if the ID is invalid. Maps the image URL 
+     * and performs a boolean check on the authenticated user's wishlist.
+     */
     public function show($id)
     {
         $product = Product::with('category')->find($id);

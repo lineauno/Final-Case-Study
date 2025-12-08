@@ -2,14 +2,31 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext'; 
 
+/**
+ * LoginPage Component
+ * Responsible for rendering the user login interface and managing 
+ * the authentication transaction. It utilizes the AuthContext for 
+ * credential validation and navigates users based on their account role.
+ */
 function LoginPage() {
     const navigate = useNavigate();
     const { login } = useAuth(); 
     
+    /**
+     * Component State Management
+     * - email/password: Synchronizes user credentials from inputs.
+     * - error: Captures and displays server rejection messages or local validation errors.
+     */
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
+    /**
+     * handleSubmit
+     * Asynchronous submission handler that dispatches login credentials to the context.
+     * Clears local form state upon success and redirects to the appropriate dashboard
+     * based on user role (Admin vs Customer).
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -29,6 +46,11 @@ function LoginPage() {
         } catch (err) {
             console.error("Login Error:", err);
             
+            /**
+             * Enhanced Error Handling
+             * Specifically identifies ban-related exceptions to provide clear 
+             * status feedback to restricted accounts.
+             */
             if (err.message && (err.message.includes('banned') || err.message.includes('Your account has been banned'))) {
                 setError('🚫 Access Denied: Your account has been banned. Please contact support.');
             } else {
@@ -46,7 +68,6 @@ function LoginPage() {
                 
                 <form onSubmit={handleSubmit}> 
                     
-                    {/* Email Input Field */}
                     <div className="form-field-wrapper">
                         <input
                             type="email"
@@ -58,7 +79,6 @@ function LoginPage() {
                         />
                     </div>
                     
-                    {/* Password Input Field */}
                     <div className="form-field-wrapper">
                         <input
                             type="password"

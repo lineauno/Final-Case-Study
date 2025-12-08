@@ -1,5 +1,8 @@
-/* src/pagesstyles/ProductDetailsPage.css */
-
+/**
+ * Page Wrapper
+ * Centers the content and applies a master 'fadeIn' animation 
+ * to provide a smooth entrance when the user selects a product.
+ */
 .details-container {
     max-width: 1200px;
     margin: 40px auto;
@@ -8,7 +11,11 @@
     animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Back Button */
+/**
+ * Back Navigation Button
+ * Uses inline-flex for alignment and a translateX transition 
+ * to indicate motion direction upon hover.
+ */
 .back-link {
     display: inline-flex;
     align-items: center;
@@ -23,14 +30,18 @@
 }
 
 .back-link:hover {
-    color: #d63384; /* Your theme pink */
-    transform: translateX(-5px); /* Little slide animation */
+    color: #d63384; 
+    transform: translateX(-5px); 
 }
 
-/* Main Grid Layout */
+/**
+ * Master Grid Layout
+ * Employs a 50/50 split grid to separate visual assets from textual information.
+ * Encapsulated in a white card with a subtle shadow to draw focus.
+ */
 .details-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Split 50/50 */
+    grid-template-columns: 1fr 1fr; 
     gap: 50px;
     background: white;
     padding: 40px;
@@ -38,7 +49,12 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
-/* Left: Image Area */
+/**
+ * Image Showcase Area
+ * Center-aligns product assets within a high-contrast background area.
+ * product-img: features a responsive drop-shadow and a subtle scale 
+ * transformation to emphasize interactivity.
+ */
 .details-image-box {
     display: flex;
     justify-content: center;
@@ -58,10 +74,14 @@
 }
 
 .details-product-img:hover {
-    transform: scale(1.02); /* Subtle zoom on hover */
+    transform: scale(1.02); 
 }
 
-/* Right: Info Area */
+/**
+ * Product Information Section
+ * Defines the typographic hierarchy for titles, pricing, and descriptions.
+ * Uses Flexbox to ensure center vertical alignment with the product image.
+ */
 .details-info-section {
     display: flex;
     flex-direction: column;
@@ -77,7 +97,7 @@
 
 .details-price {
     font-size: 2.2rem;
-    color: #d63384; /* Theme Pink */
+    color: #d63384; 
     font-weight: 800;
     margin-bottom: 20px;
 }
@@ -89,6 +109,10 @@
     margin-bottom: 30px;
 }
 
+/**
+ * Stock Indicators
+ * Semantic color mapping for stock availability status.
+ */
 .stock-status {
     font-weight: 700;
     font-size: 0.9rem;
@@ -100,7 +124,11 @@
 .stock-status.in-stock { color: #2ecc71; }
 .stock-status.out-of-stock { color: #e74c3c; }
 
-/* Button Group */
+/**
+ * Interactive Control Group
+ * primary-btn: High-emphasis gradient styling for the conversion action.
+ * secondary-btn: Outlined navigation button for non-primary viewing tasks.
+ */
 .details-button-group {
     display: flex;
     gap: 20px;
@@ -148,13 +176,19 @@
     background: #fff0f6;
 }
 
-/* Animation */
+/**
+ * Animation Definitions
+ */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive Design (Mobile) */
+/**
+ * Media Queries: Responsive Logic
+ * Transitions to a single-column layout on tablet/mobile viewports to 
+ * maintain legibility and touch-friendly controls.
+ */
 @media (max-width: 768px) {
     .details-grid {
         grid-template-columns: 1fr;
