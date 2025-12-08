@@ -1,0 +1,200 @@
+/**
+ * Page Wrapper
+ * Centers the content and applies a master 'fadeIn' animation 
+ * to provide a smooth entrance when the user selects a product.
+ */
+.details-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/**
+ * Back Navigation Button
+ * Uses inline-flex for alignment and a translateX transition 
+ * to indicate motion direction upon hover.
+ */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 25px;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.back-link:hover {
+    color: #d63384; 
+    transform: translateX(-5px); 
+}
+
+/**
+ * Master Grid Layout
+ * Employs a 50/50 split grid to separate visual assets from textual information.
+ * Encapsulated in a white card with a subtle shadow to draw focus.
+ */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 50px;
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+/**
+ * Image Showcase Area
+ * Center-aligns product assets within a high-contrast background area.
+ * product-img: features a responsive drop-shadow and a subtle scale 
+ * transformation to emphasize interactivity.
+ */
+.details-image-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 450px;
+}
+
+.details-product-img {
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+    transition: transform 0.3s ease;
+}
+
+.details-product-img:hover {
+    transform: scale(1.02); 
+}
+
+/**
+ * Product Information Section
+ * Defines the typographic hierarchy for titles, pricing, and descriptions.
+ * Uses Flexbox to ensure center vertical alignment with the product image.
+ */
+.details-info-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.details-title {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.details-price {
+    font-size: 2.2rem;
+    color: #d63384; 
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.details-description {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+/**
+ * Stock Indicators
+ * Semantic color mapping for stock availability status.
+ */
+.stock-status {
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+}
+
+.stock-status.in-stock { color: #2ecc71; }
+.stock-status.out-of-stock { color: #e74c3c; }
+
+/**
+ * Interactive Control Group
+ * primary-btn: High-emphasis gradient styling for the conversion action.
+ * secondary-btn: Outlined navigation button for non-primary viewing tasks.
+ */
+.details-button-group {
+    display: flex;
+    gap: 20px;
+}
+
+.primary-add-to-cart-btn {
+    padding: 16px 40px;
+    background: linear-gradient(135deg, #d63384, #c2185b);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(214, 51, 132, 0.3);
+    flex: 2;
+}
+
+.primary-add-to-cart-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(214, 51, 132, 0.4);
+}
+
+.primary-add-to-cart-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.secondary-btn {
+    padding: 16px 30px;
+    background: white;
+    color: #d63384;
+    border: 2px solid #d63384;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.secondary-btn:hover {
+    background: #fff0f6;
+}
+
+/**
+ * Animation Definitions
+ */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/**
+ * Media Queries: Responsive Logic
+ * Transitions to a single-column layout on tablet/mobile viewports to 
+ * maintain legibility and touch-friendly controls.
+ */
+@media (max-width: 768px) {
+    .details-grid {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+    .details-button-group {
+        flex-direction: column;
+    }
+}

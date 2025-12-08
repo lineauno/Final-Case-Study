@@ -1,0 +1,161 @@
+/**
+ * Admin Page Layout
+ * Provides a responsive content wrapper with central alignment,
+ * standardized spacing, and professional typography for administration modules.
+ */
+.admin-page-container {
+    padding: 30px 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.page-header {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 25px;
+}
+
+/**
+ * User Table Card
+ * Wraps the data table in a clean, shadowed white container
+ * with overflow handling to support mobile visibility.
+ */
+.admin-card.user-table-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    overflow-x: auto;
+}
+
+/**
+ * User Table Typography & Borders
+ * Ensures high readability via uppercase headers, consistent row padding,
+ * and horizontal lines to differentiate user records.
+ */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.user-table th {
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.user-table td {
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    color: #444;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.user-table thead tr {
+    border-bottom: 2px solid #eee;
+}
+
+.user-table tbody tr:hover {
+    background-color: #fcfcfc; 
+}
+
+/**
+ * Role-Based Badges
+ * Semantic styling for account types. Admin users are flagged in theme pink,
+ * while standard customers receive a contrasting blue treatment.
+ */
+.role-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.role-badge.admin {
+    background-color: #ffc1e3;
+    color: #d63384; 
+}
+
+.role-badge.customer {
+    background-color: #e6f7ff;
+    color: #1890ff; 
+}
+
+/**
+ * Destructive Action Button
+ * High-contrast red/pink styling for user deletion, featuring hover
+ * transitions and disabled-state handling.
+ */
+.delete-user-btn {
+    background: #ff6f91;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.delete-user-btn:hover:not(:disabled) {
+    background: #e74c3c;
+}
+
+/**
+ * Navigation Pagination
+ * Centered flexbox controls for browsing the user directory.
+ * Includes visual feedback for active and disabled navigation states.
+ */
+.pagination-controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    border-top: 1px solid #f0f0f0;
+    padding: 15px 0;
+}
+
+.pagination-controls span {
+    font-weight: bold;
+}
+
+.pagination-controls button {
+    padding: 8px 15px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.pagination-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/**
+ * Status and Fallback Displays
+ * Defines centered styles for the loading state and missing data messages.
+ */
+.admin-loading {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.2rem;
+    color: #d63384;
+}
+
+.no-users-message {
+    text-align: center;
+    margin-top: 20px;
+    color: #888;
+}

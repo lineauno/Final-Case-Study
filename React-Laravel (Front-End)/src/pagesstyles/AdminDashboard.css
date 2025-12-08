@@ -1,0 +1,176 @@
+/**
+ * Global Typography
+ * Imports the 'Quicksand' Google font and applies it globally to ensure 
+ * consistent branding and legibility across the application.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
+
+body {
+    font-family: 'Quicksand', sans-serif !important;
+    background-color: #fff9f0;
+}
+
+/**
+ * Dashboard Container
+ * Centers the content with a responsive max-width and sets the primary 
+ * padding for administrative pages.
+ */
+.admin-dashboard-page {
+    padding: 3rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+    color: #444;
+}
+
+.welcome-heading {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.overview-text {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+/**
+ * Statistics Grid Layout
+ * Implements a responsive CSS Grid using 'auto-fit' to dynamically adjust 
+ * the number of columns based on screen real estate.
+ */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+/**
+ * Metric Card Design
+ * Interactive card with subtle shadow and lift transition effects on hover.
+ */
+.metric-card {
+    background-color: #ffffff;
+    padding: 2.5rem 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(233, 30, 99, 0.15);
+    border-color: #ffc1e3;
+}
+
+/**
+ * Circular Icon Styling
+ * Uses Flexbox for perfect centering of SVG icons within the metric bubbles.
+ */
+.metric-icon {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    background: #fff0f3;
+    color: #d63384;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.metric-card:hover .metric-icon {
+    background: #d63384;
+    color: #ffffff;
+}
+
+.metric-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #333;
+    margin: 0;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.metric-title {
+    font-size: 0.95rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/**
+ * Recent Activity Feed
+ * Card-based layout with distinct vertical accent bars for individual activity items.
+ */
+.admin-recent-activity {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.admin-recent-activity h3 {
+    margin-top: 0;
+    font-size: 1.4rem;
+    color: #2c3e50;
+    border-bottom: 2px solid #f1f1f1;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.activity-item {
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border-left: 4px solid #d63384;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+/**
+ * Loading & Animation Logic
+ * Provides visual feedback during data fetching via a 'pulse' keyframe animation.
+ */
+.admin-loading1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    width: 100%;
+    font-size: 1.5rem;
+    color: #d63384;
+    font-weight: 700;
+    letter-spacing: 1px;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; transform: scale(0.98); }
+    50% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0.5; transform: scale(0.98); }
+}

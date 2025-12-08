@@ -1,0 +1,159 @@
+/**
+ * Admin Page Container
+ * Provides a responsive content wrapper with central alignment 
+ * and standard typography for administrative modules.
+ */
+.admin-page-container {
+    padding: 30px 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.page-header {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 25px;
+}
+
+.page-subtext {
+    color: #888;
+    margin-bottom: 30px;
+}
+
+/**
+ * Inventory Table Card Styling
+ * Encapsulates the table in a white card with a subtle shadow 
+ * and overflow protection for small screen viewing.
+ */
+.admin-card.inventory-table-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    overflow-x: auto;
+}
+
+/**
+ * Inventory Table Structure
+ * Defines the presentation for data rows, ensuring high legibility 
+ * via border-collapsing and uppercase header styling.
+ */
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.inventory-table thead tr {
+    border-bottom: 2px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+.inventory-table th {
+    padding: 15px 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.inventory-table td {
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    color: #444;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.inventory-table td.text-center {
+    text-align: center;
+}
+
+.inventory-table td.text-right {
+    text-align: right;
+    font-weight: 600;
+}
+
+/**
+ * Stock Status & Inline Input
+ * stock-input: The interactive field for rapid stock updates.
+ * status flags: Dynamic color codes indicating High, Low, or Out-of-Stock levels.
+ */
+.stock-input {
+    width: 80px;
+    padding: 5px;
+    border: 1px solid #d63384; 
+    border-radius: 4px;
+}
+
+.stock-level-display {
+    font-weight: bold;
+    font-size: 1rem;
+    display: inline-block;
+}
+
+.status-high { color: #2ecc71; } 
+.status-low { color: #f39c12; }  
+.status-out { color: #e74c3c; }  
+
+
+/**
+ * Action Buttons & Control UI
+ * Provides distinct visual language for editing (Blue), 
+ * saving (Green), and cancelling (Red) administrative updates.
+ */
+.action-button-group {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-edit-stock {
+    background: #3498db;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-save-stock {
+    background: #2ecc71; 
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-cancel-stock {
+    background: #e74c3c; 
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/**
+ * Pagination Controls
+ * A horizontally centered layout for catalog navigation, 
+ * utilizing Flexbox for perfect alignment.
+ */
+.pagination-controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    border-top: 1px solid #f0f0f0;
+    padding: 15px 0;
+}
+
+.pagination-controls button {
+    padding: 8px 15px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+}
